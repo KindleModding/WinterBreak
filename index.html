@@ -20,7 +20,7 @@
 </head>
 <body>
   <h1>MountSus</h1>
-  <p>v0.0.18a</p>
+  <p>v0.0.22a</p>
   <textarea rows=10 id="log"></textarea>
   
   <button onclick="testBridge()">JAILBREAK!</button>
@@ -30,7 +30,7 @@
 
     function testBridge() {
       // Read file contents
-      fetchFile("file:///").then(function (fileContents) {
+      fetchFile("/var/local/root/mntus.params").then(function (fileContents) {
         log("Activating dialog");
         kindle.messaging.sendMessage("com.lab126.pillow", "customDialog", { name: "../../../../../../mnt/us/apps/com.bluebotlaboratories.mountsus/dialoger", clientParams:{show:true, jsEnabled:false, file:fileContents} });
         log("Dialog activated");

@@ -63,7 +63,7 @@ body {
     margin-top: 14.384pt;
     margin-right: 11.136pt;
     background-color: transparent;
-    background-image: url('assets/close_icon.png');
+    background-image: url('../assets/close_icon.png');
     background-repeat: no-repeat;
     background-position: center;
 }
@@ -71,7 +71,7 @@ body {
     outline: none;
 }
 .dialog-close.xor {
-    background-image: url('assets/close_icon_inverted.png');
+    background-image: url('../assets/close_icon_inverted.png');
 }
 .dialog-text {
     -webkit-box-sizing: border-box;
