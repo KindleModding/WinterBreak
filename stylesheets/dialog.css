@@ -1,0 +1,106 @@
+
+/*
+* dialog.css
+*
+* Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+*
+* PROPRIETARY/CONFIDENTIAL
+*
+* Use is subject to license terms.
+*/
+
+body {
+    margin: 0;
+    padding: 0;
+    border: none;
+}
+.dialog {
+    -webkit-box-sizing: border-box;
+    width: 250.56pt;
+    height: auto;
+    padding: 0;
+    margin: 0;
+    border: none;
+    -webkit-user-select: none;
+    font-weight: normal;
+    font-family: dialog;
+    background-color: #FFFFFF;
+}
+.dialog-title {
+    -webkit-box-sizing: border-box;
+    display: -webkit-box;
+    -webkit-box-orient: horizontal;
+    -webkit-box-pack: start;
+    -webkit-box-align: start;
+    margin: 0;
+    padding: 0;
+    border: none;
+}
+.landscape #simpleWizardTitle,
+.dialog-title-text {
+    padding-top: 4.06pt;
+}
+.dialog-title-text {
+    display: block;
+    margin: 0;
+    padding: 0;
+    padding-left: 13.92pt;
+    padding-top: 16.704pt;
+    padding-right: 13.92pt;
+    border: none;
+    font-size: 12.76pt;
+    font-weight: normal;
+    font-family: dialogMedium;
+    -webkit-box-flex: 1;
+}
+.dialog-close {
+    display: block;
+    height: 24.824pt;
+    width: 24.824pt;
+    margin: 0;
+    padding: 0;
+    border: none;
+    margin-top: 14.384pt;
+    margin-right: 11.136pt;
+    background-color: transparent;
+    background-image: url('assets/close_icon.png');
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.dialog-close:focus {
+    outline: none;
+}
+.dialog-close.xor {
+    background-image: url('assets/close_icon_inverted.png');
+}
+.dialog-text {
+    -webkit-box-sizing: border-box;
+    border: none;
+    /* TODO from HIG for menu dialogs; might change */
+    
+    margin-left: 13.92pt;
+    margin-right: 13.92pt;
+    /* TODO not specified yet in HIG for text dialogs */
+    
+    margin-top: 10.0224pt;
+    font-size: 10.44pt;
+}
+
+.dialog-title-text.large {
+    font-weight: bold;
+    font-family: dialog;
+}
+
+.dialog-close:disabled {
+    opacity: 0.3;
+}
+
+.dialog-close:enabled {
+    opacity: 1.0;
+}
+
+.device-name-inline {
+    display: inline;
+    font-family: inherit;
+    font-size: 100%;
+}

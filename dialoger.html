@@ -1,0 +1,47 @@
+<!--
+ - browser_setting_dialog.html
+ -
+ - Copyright (c) 2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ -
+ - PROPRIETARY/CONFIDENTIAL
+ --
+ - Use is subject to license terms.
+ -->
+ <html lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8"/>
+        <link rel="stylesheet" type="text/css" href="stylesheets/dialog.css"/>
+        <link rel="stylesheet" type="text/css" href="stylesheets/widget_list.css"/>
+    
+        <script type="text/javascript" src="js/local_debug.js"></script>
+        <script type="text/javascript" src="js/constants.js"></script> <!-- must be first -->
+        <script type="text/javascript" src="js/common_utils.js"></script>
+        <!-- must be loaded if dialog supports large mode -->
+        <script type="text/javascript" src="js/pillow.js"></script>
+        <script type="text/javascript" src="js/client_params_handler.js"></script>
+        <script type="text/javascript" src="js/lipc_event_handler.js"></script>
+        <script type="text/javascript" src="js/pillow_case.js"></script>
+        <script type="text/javascript" src="js/window_title.js"></script>
+        <script type="text/javascript" src="js/widget_list.js"></script>
+        <script type="text/javascript" src="js/xor_button.js"></script>
+        <script type="text/javascript" src="js/browser_setting_dialog.js"></script>
+        <script type="text/javascript" src="strings/browser_settings_dialog_strings.js"></script>
+    </head>
+    <body onload="mountSusDialog.load();">
+    <div class="dialog" id="dialog">
+        <div class="dialog-title">
+            <div class="dialog-title-text" id="settingTitleText">MountSus</div>
+            <button class="dialog-close" id="advancedCancelButton"></button>
+        </div>
+        <div>
+            <div id="settings" class="list">
+                <button class="item template">
+                    <div class="text-field name" dir="auto"></div>
+                </button>
+            </div>
+        </div>
+        <p id="jailState">Loading...</p>
+    </div>
+    </body>
+    </html>
+    

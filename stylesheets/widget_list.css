@@ -1,0 +1,141 @@
+/*
+* widget_list.css
+*
+* Copyright (c) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+*
+* PROPRIETARY/CONFIDENTIAL
+*
+* Use is subject to license terms.
+*/
+
+.list {
+    -webkit-box-sizing: border-box;
+    margin: 0;
+    padding: 7.888pt;
+    border: none;
+    position: relative;
+}
+.list > .template.item {
+    display: none;
+}
+.list > .items {
+    -webkit-box-sizing: border-box;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-box-align: stretch;
+}
+.list > .items > .item {
+    -webkit-box-sizing: border-box;
+    display: -webkit-box;
+    -webkit-box-orient: horizontal;
+    -webkit-box-align: end;
+    background-color: transparent;
+    font-family: dialog;
+    font-weight: normal;
+    position: relative;
+    /**
+* The border is used to create the white inset around the black XOR area.
+* The widths have not been specified in the HIG.
+*/
+    
+    border: solid #FFFFFF;
+    border-top-width: 1.624pt;
+    border-bottom-width: 1.624pt;
+    border-left-width: 0;
+    border-right-width: 0;
+    margin: 0;
+    /* From the HIG */
+    
+    padding-left: 3.944pt;
+    /* From the HIG */
+    
+    padding-right: 3.944pt;
+    padding-top: 0;
+    /**
+     * From the HIG: the bottom padding is set to the distance between the
+     * bottom and the baseline because it makes icons easier to position.  The
+     * total bottom padding is 11.6pt, but some is provided by the white
+     * border.
+     */
+    
+    padding-bottom: 11.832pt;
+    font-size: 11.6pt;
+    height: 32.48pt;
+}
+.list > .items > .sep {
+    display: block;
+    background-color: #000000;
+    border: none;
+    margin: 0;
+    padding: 0;
+    height: 1px;
+}
+/**
+* This rule renders the baseline as a black line.
+* For debugging only!
+*/
+/*
+.list > .items > .item:before {
+display: block;
+content: '';
+background-color: #000000;
+border: none;
+margin: 0;
+padding: 0;
+ height: 1px;
+position: absolute;
+left: 0;
+right: 0;
+ top: 17.4pt;
+}
+*/
+
+.list > .items > .item:focus {
+    outline: none;
+}
+/**
+* Inverted items
+*/
+
+.list > .items > .item.xor {
+    -webkit-font-smoothing: none;
+    color: #FFFFFF;
+    background-color: #000000;
+}
+/**
+* Fields
+*/
+
+.list > .items > .item .text-field,
+.list > .items > .item .text-replace-field {
+    -webkit-box-sizing: border-box;
+    display: block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    text-align: left;
+}
+.list > .items > .item .text-field,
+.list > .items > .item .text-replace-field {
+    position: relative;
+    /* Empirically-determined to produce the correct baseline. */
+    
+    top: 5.104pt;
+}
+.list > .items > .item .class-field {
+    /**
+* Class fields are used to display icons, and those icons are positioned
+* relative to the baseline. This rule puts the icon on the baseline,
+* assuming that the asset has no built-in padding.
+*
+* Clients of the list widget should set the width of their icon fields,
+* and if they need an offset from the baseline, they should either build
+* it in to the asset padding or use relative positioning.
+*/
+    
+    background-position: center bottom;
+    background-repeat: no-repeat;
+    /* Empirically-determined to produce the correct baseline. */
+    
+    height: 17.4pt;
+}

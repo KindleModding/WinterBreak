@@ -1,0 +1,43 @@
+<!DOCTYPE HTML>
+
+<!-- Copyright Bluebotlaboratories -->
+
+<html>
+<head>
+  <meta name="viewport" content="user-scalable=no"/>
+  <script src="file:///mnt/us/mesquito/polyfill.min.js"></script>
+  <script src="file:///mnt/us/mesquito/sdk.js"></script>
+  <script src="./main.js"></script>
+  <script src="./inspect.js"></script>
+
+  <link href="./main.css" rel="stylesheet">
+
+  <title>MountSus</title>
+  
+  <script>
+    var kindle = window.kindle || top.kindle;
+  </script>
+</head>
+<body>
+  <h1>MountSus</h1>
+  <p>v0.0.18a</p>
+  <textarea rows=10 id="log"></textarea>
+  
+  <button onclick="testBridge()">JAILBREAK!</button>
+
+  <script>
+    log("Ready to Jailbreak!");
+
+    function testBridge() {
+      // Read file contents
+      fetchFile("file:///").then(function (fileContents) {
+        log("Activating dialog");
+        kindle.messaging.sendMessage("com.lab126.pillow", "customDialog", { name: "../../../../../../mnt/us/apps/com.bluebotlaboratories.mountsus/dialoger", clientParams:{show:true, jsEnabled:false, file:fileContents} });
+        log("Dialog activated");
+      });
+    }
+  </script>
+
+  <div id="lastCommands"></div>
+</body>
+</html>

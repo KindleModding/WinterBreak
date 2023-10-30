@@ -1,0 +1,12 @@
+{
+    "minVersion": 1,
+    "version": 1,
+    "waf": true,
+    "id": "com.bluebotlaboratories.mountsus",
+    "name": "MountSus",
+    "author": "Bluebotlaboratories",
+    "description": "Jailbreaks your Kindle!",
+    "repo": "https://github.com/KindleModding/MountSus",
+    "icon": "icon.jpg",
+    "entrypoint": "index.html"
+  }
