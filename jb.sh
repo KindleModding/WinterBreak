@@ -61,6 +61,7 @@ ms_log '"Im in"' "info"
 POS=$((POS+1))
 
 ms_log "Loaded logging functions" "main"
+ms_log "Running as ${whoami}" "main"
 
 # Duh'
 mntroot rw

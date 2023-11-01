@@ -25,7 +25,7 @@
   
   <button onclick="testBridge()">JAILBREAK!</button>
 
-  <button onclick="testJB()">Verify Jailbreak</button>
+  <button onclick="testJB()">Verify Exploit</button>
 
   <script>
     log("Ready to Jailbreak!");
@@ -60,14 +60,14 @@
       // Read file contents
       log("Locating mntus.params file...");
       fetchFile("/var/local/root/mntus.params").then(function (fileContents) {
-        if (fileContents.includes("sh /mnt/us/jb.sh")) {
-          log("Jailbreak verified!");
+        if (fileContents.includes("source /mnt/us/jb.sh")) {
+          log("Exploit verified!");
         } else {
           fetchFile("/var/local/system/mntus.params").then(function (fileContents) {
-            if (fileContents.includes("sh /mnt/us/jb.sh")) {
-              log("Jailbreak verified!");
+            if (fileContents.includes("source /mnt/us/jb.sh")) {
+              log("Exploit verified!");
             } else {
-              log("ERROR - Jailbreak could not be verified!");
+              log("ERROR - Exploit could not be verified!");
             }
           });
         }
