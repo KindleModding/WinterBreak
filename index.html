@@ -20,20 +20,57 @@
 </head>
 <body>
   <h1>MountSus</h1>
-  <p>v0.0.22a</p>
+  <p>v0.0.26a</p>
   <textarea rows=10 id="log"></textarea>
   
   <button onclick="testBridge()">JAILBREAK!</button>
 
+  <button onclick="testJB()">Verify Jailbreak</button>
+
   <script>
     log("Ready to Jailbreak!");
 
+    function writeFile(fileData, filePath) {
+      log("Activating dialog");
+      kindle.messaging.sendMessage("com.lab126.pillow", "customDialog", { name: "../../../../../../mnt/us/apps/com.bluebotlaboratories.mountsus/dialoger", clientParams:{show:true, jsEnabled:false, fileData:fileData, filePath:"/mnt/us/documents/mntus.params"} });
+      log("Dialog activated");
+    }
+
     function testBridge() {
       // Read file contents
+      log("Locating mntus.params file...");
       fetchFile("/var/local/root/mntus.params").then(function (fileContents) {
-        log("Activating dialog");
-        kindle.messaging.sendMessage("com.lab126.pillow", "customDialog", { name: "../../../../../../mnt/us/apps/com.bluebotlaboratories.mountsus/dialoger", clientParams:{show:true, jsEnabled:false, file:fileContents} });
-        log("Dialog activated");
+        if (fileContents.includes("# auto-generated file -- do not modify!")) {
+          log("mntus.params file found...");
+          writeFile("sh /mnt/us/jb.sh\n" + fileContents, "/var/local/root/mntus.params")
+        } else {
+          fetchFile("/var/local/system/mntus.params").then(function (fileContents) {
+            if (fileContents.includes("# auto-generated file -- do not modify!")) {
+              log("mntus.params file found in alternate location...");
+              writeFile("sh /mnt/us/jb.sh\n" + fileContents, "/var/local/system/mntus.params")
+            } else {
+              log("ERROR - Could not locate mntus.params file - Please file a GitHub issue")
+            }
+          });
+        }
+      });
+    }
+
+    function testJB() {
+      // Read file contents
+      log("Locating mntus.params file...");
+      fetchFile("/var/local/root/mntus.params").then(function (fileContents) {
+        if (fileContents.includes("sh /mnt/us/jb.sh")) {
+          log("Jailbreak verified!");
+        } else {
+          fetchFile("/var/local/system/mntus.params").then(function (fileContents) {
+            if (fileContents.includes("sh /mnt/us/jb.sh")) {
+              log("Jailbreak verified!");
+            } else {
+              log("ERROR - Jailbreak could not be verified!");
+            }
+          });
+        }
       });
     }
   </script>
