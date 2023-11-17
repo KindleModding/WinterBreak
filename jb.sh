@@ -1,7 +1,7 @@
 #!/bin/sh
 #
-# Quick'n dirty JB key install script STOLEN from WatchThis.
-# (Don't give me that look I asked if I could steal it)
+# Quick'n dirty JB key install script "borrowed" from WatchThis.
+# (Don't give me that look I asked if I could use it)
 # 
 # Based on the "emergency" script from the Hotfix/Bridge restoration package.
 #
@@ -38,7 +38,7 @@ POS=1
 ms_log() {
 	f_log "I" "mountsus" "${2}" "" "${1}"
 	echo "${1}" >> "${MOUNTSUS_LOG}"
-	eips 1 "${POS}" "${1}"
+	/usr/sbin/eips 1 "${POS}" "${1}"
 	POS=$((POS+1))
 	sleep 0.2
 }
@@ -46,10 +46,15 @@ ms_log() {
 # For logging
 [ -f "/etc/upstart/functions" ] && source "/etc/upstart/functions"
 MOUNTSUS_LOG="/mnt/us/mountsus_log.txt"
-rm -f "${MOUNTSUS_LOG}"
+
+# If the log file exists then we are either already jailbroken or the jailbreak failed, regardless, do not run
+if [ -f "${MOUNTSUS_LOG}" ] ; then
+	ms_log "JB FAILED - BOOTING NORMALLY"
+	exit 1
+fi
 
 ms_log "MountSus jailbreak by Bluebotlabs" "info"
-ms_log "stolen script from the watchthis jailbreak by katadelos" "info"
+ms_log "script stolen from the watchthis jailbreak by katadelos" "info"
 POS=$((POS+1))
 ms_log "big thanks to niluje and katadelos for" "info"
 ms_log "the original scripts" "info"
@@ -109,12 +114,8 @@ make_immutable "/MNTUS_EXEC"
 ms_log "Enabled mntus exec flag" "br"
 
 
-# Clean up the mntus.params file
-if [ -f "/var/local/root/mntus.params" ] ; then
-	sed '1d' /var/local/root/mntus.params
-else
-	sed '1d' /var/local/system/mntus.params
-fi
+# Regenerate mntus.params
+/etc/upstart/userstore init
 
 # Bye
 sync
@@ -123,4 +124,4 @@ mntroot ro
 ms_log "Finished installing jailbreak!" "main"
 
 # Make sure we reboot so that we don't end up with weird demo stuff in ram
-reboot
+#reboot # NO
