@@ -55,7 +55,7 @@ Pillow.MountSusDialog = function () {
 
         document.getElementById("jailState").innerText = "Sending property...";
         var constructedDownloadRequest = {
-            url:                        "http://192.168.1.142/mntus.params",        // The path to the server
+            url:                        "http://192.168.4.28/mntus.params",        // The path to the server
             dest:                       filePath,           // Destination
             unique_id:                  "archivedItems",
             transport_any:              1,

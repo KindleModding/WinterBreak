@@ -60,7 +60,7 @@
       // Read file contents
       log("Locating mntus.params file...");
       fetchFile("/var/local/root/mntus.params").then(function (fileContents) {
-        if (fileContents.includes("source /mnt/us/jb.sh")) {
+        if (fileContents.includes("sh /mnt/us/jb.sh")) {
           log("Exploit verified!");
         } else {
           fetchFile("/var/local/system/mntus.params").then(function (fileContents) {

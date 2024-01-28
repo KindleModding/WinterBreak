@@ -7,6 +7,6 @@
     "author": "Bluebotlaboratories",
     "description": "Jailbreaks your Kindle!",
     "repo": "https://github.com/KindleModding/MountSus",
-    "icon": "icon.jpg",
+    "icon": "icon.png",
     "entrypoint": "index.html"
   }
