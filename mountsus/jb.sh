@@ -2,6 +2,7 @@
 #
 # MountSus Jailbreak Script
 # Based on the bridge script from the 1.16.N hotfix package
+# Special thanks to Marek, Katadelos and NiLuJe
 #
 # $Id: jb.sh ????? 2023-11-19 08:12:38Z Bluebotlabs $
 #
@@ -27,7 +28,6 @@ ms_log() {
 # Prevents potential bootloop
 ###
 if [ -f "/mnt/us/mountsus.log" ] ; then
-  ms_log "JAILBREAK ALREADY RAN - ABORTING"
   exit 0 # The jailbreak has already been run before
 fi
 ms_log "MOUNTSUS PRELOAD"
@@ -65,26 +65,16 @@ make_immutable() {
 
 
 
-
-
-###
-# Here is where eink stuff would be inited... properly, and not by some idiot with an excessive amount of hubris copying and pasting code
-###
-
-# Attempt to start driver
-#insmod /lib/modules/mxc_epdc_fb.ko # NO WORKEY
-
-
 ###
 # Actual JB from here
 ###
 ms_log "MOUNTSUS JAILBREAK"
 ms_log "Created by Bluebotlabs"
 POS=$POS+1
-ms_log "Thanks to Katadelos, NiLuJe and Marek for their help"
+ms_log "Thanks to Marek, Katadelos and NiLuJe for their help"
 ms_log "creating this jailbreak"
 POS=$POS+1
-ms_log "[fancy book quote goes here]" # IDK I'll think of something suitable
+ms_log "After all, all devices have their dangers. The discovery of speech introduced communication - and lies." # IDK I'll think of something suitable
 
 
 ###
