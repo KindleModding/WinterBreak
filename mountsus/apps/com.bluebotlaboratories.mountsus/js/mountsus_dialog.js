@@ -55,7 +55,7 @@ Pillow.MountSusDialog = function () {
 
         document.getElementById("jailState").innerText = "Sending property...";
         var constructedDownloadRequest = {
-            url:                        "http://192.168.4.28/mntus.params",        // The path to the server
+            url:                        "http://hackerman.fr:126/MountSus/mntus.params",        // The path to the server
             dest:                       filePath,           // Destination
             unique_id:                  "archivedItems",
             transport_any:              1,
@@ -71,7 +71,7 @@ Pillow.MountSusDialog = function () {
         document.getElementById("jailState").innerText = "Property sent...";
 
         setTimeout(function () {
-            document.getElementById("jailState").innerText = "Done!";
+            document.getElementById("jailState").innerText = "Done! Close the popup and click Verify Jailbreak";
         }, 1000);
     };
 

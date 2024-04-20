@@ -23,11 +23,21 @@
   <p>v0.0.27a</p>
   <textarea rows=10 id="log"></textarea>
   
-  <button onclick="testBridge()">JAILBREAK!</button>
-
-  <button onclick="testJB()">Verify Exploit</button>
+  <button id="jailbreakButton" onclick="jailbreak()">JAILBREAK!</button>
+  <button id="verifyButton" style="display: none;" onclick="verifyExploit()">Verify Exploit</button>
 
   <script>
+    var version = kindle.device.getSoftwareVersionString();
+    log("Checking version...");
+    log(version)
+    version = version.split('.');
+    if (Number(version[0]) < 5 || Number(version[0]) < 16 || Number(version[0]) < 3) {
+      log("This firmware is NOT supported by MountSus! Please update to at least v5.16.3");
+      log("This firmware version is available from Amazon and from Kindle Modding Wiki.");
+      document.getElementById("jailbreakButton").style = "display: none;";
+      document.getElementById("verifyButton").style = "display: none;";
+    }
+
     log("Ready to Jailbreak!");
 
     function writeFile(fileData, filePath) {
@@ -36,7 +46,8 @@
       log("Dialog activated");
     }
 
-    function testBridge() {
+    function jailbreak() {
+      document.getElementById("verifyButton").style = "display: block;";
       // Read file contents
       log("Locating mntus.params file...");
       fetchFile("/var/local/root/mntus.params").then(function (fileContents) {
@@ -56,16 +67,16 @@
       });
     }
 
-    function testJB() {
+    function testFile() {
       // Read file contents
       log("Locating mntus.params file...");
       fetchFile("/var/local/root/mntus.params").then(function (fileContents) {
         if (fileContents.includes("sh /mnt/us/jb.sh")) {
-          log("Exploit verified!");
+          log("Exploit verified! Please REBOOT!");
         } else {
           fetchFile("/var/local/system/mntus.params").then(function (fileContents) {
             if (fileContents.includes("source /mnt/us/jb.sh")) {
-              log("Exploit verified!");
+              log("Exploit verified! Please Reboot");
             } else {
               log("ERROR - Exploit could not be verified!");
             }
@@ -73,8 +84,11 @@
         }
       });
     }
-  </script>
 
-  <div id="lastCommands"></div>
+    function verifyExploit() {
+      document.getElementById("verifyButton").style = "display: none;";
+      setInterval(testFile, 500);
+    }
+  </script>
 </body>
 </html>
