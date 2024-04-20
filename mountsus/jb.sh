@@ -108,7 +108,7 @@ install_touch_update_key_squash()
     local my_loop="$(grep ' /etc/uks ' /proc/mounts | cut -f1 -d' ')"
     umount "${my_loop}"
     losetup -d "${my_loop}"
-    cp --verbose -f "/mnt/us/updater_keys.sqsh" "/etc/uks.sqsh"
+    cp --verbose -f "/mnt/us/patchedUks.sqsh" "/etc/uks.sqsh"
     mount -o loop="${my_loop}",norelatime,nodiratime,noatime -t squashfs "/etc/uks.sqsh" "/etc/uks"
     chown root:root "/etc/uks.sqsh"
     chmod 0644 "/etc/uks.sqsh"
@@ -129,7 +129,7 @@ if [ ! -f "/etc/uks.sqsh" ] && [ ! -f "/etc/uks/pubdevkey01.pem" ] ; then
 fi
 
 # Check if we need to do something with the OTA keystore
-if [ -f "/etc/uks.sqsh" ] && [ -f "/mnt/us/updater_keys.sqsh" ] ; then
+if [ -f "/etc/uks.sqsh" ] && [ -f "/mnt/us/patchedUks.sqsh" ] ; then
   install_touch_update_key_squash
 
   # Verify key installation
@@ -139,7 +139,7 @@ if [ -f "/etc/uks.sqsh" ] && [ -f "/mnt/us/updater_keys.sqsh" ] ; then
   else
     ms_log "ERR - Could not install uks.sqsh"
     ms_log "$(whoami)"
-    ms_log "$(md5sum "/mnt/us/updater_keys.sqsh" | awk '{ print $1; }')"
+    ms_log "$(md5sum "/mnt/us/patchedUks.sqsh" | awk '{ print $1; }')"
     ms_log "$(md5sum "/etc/uks.sqsh" | awk '{ print $1; }')"
     ms_log "$(md5sum "${ROOT}/etc/uks.sqsh" | awk '{ print $1; }')"
   fi

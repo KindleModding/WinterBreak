@@ -1,0 +1,22 @@
+--- originalHotfix/install-bridge.sh	2021-01-28 22:07:17.000000000 +0100
++++ install-bridge.sh	2023-10-27 18:51:17.113787466 +0200
+@@ -47,6 +47,7 @@
+     # Cleanup & exit w/ prejudice
+     rm -f bridge
+     rm -f developer.keystore
++    rm -f patchedUks.sqsh
+     rm -f json_simple-1.1.jar
+     rm -f gandalf
+     rm -f bridge.conf
+@@ -71,6 +72,11 @@
+ 
+ otautils_update_progressbar
+ 
++logmsg "I" "install" "" "Storing combined developer keystore"
++cp -f patchedUks.sqsh "${MKK_PERSISTENT_STORAGE}/patchedUks.sqsh"
++
++otautils_update_progressbar
++
+ logmsg "I" "install" "" "Storing kindlet jailbreak"
+ cp -f json_simple-1.1.jar "${MKK_PERSISTENT_STORAGE}/json_simple-1.1.jar"
+ 

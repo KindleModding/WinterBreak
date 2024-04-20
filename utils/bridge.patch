@@ -1,0 +1,62 @@
+--- bridge	2022-10-02 03:32:37.000000000 +0200
++++ bridgePatched	2023-10-27 15:03:26.575430375 +0200
+@@ -520,10 +520,27 @@
+ install_touch_update_key()
+ {
+ 	mount_root_rw
+-	logmsg "I" "install_touch_update_key" "" "Copying the jailbreak updater key"
+-	make_mutable "${ROOT}/etc/uks/pubdevkey01.pem"
+-	rm -rf "${ROOT}/etc/uks/pubdevkey01.pem"
+-	cat > "${ROOT}/etc/uks/pubdevkey01.pem" << EOF
++	UKSSQSH="${ROOT}/etc/uks.sqsh"
++	if [ -f $UKSSQSH ] ; then
++		logmsg "I" "install_touch_update_key" "" "Copying the jailbreak updater keystore"
++
++		make_mutable "${UKSSQSH}"
++		LOOP=$(mount | grep ' on /etc/uks ' | awk '{print $1}')
++		umount $LOOP
++		losetup -d $LOOP
++		cp "${MKK_PERSISTENT_STORAGE}/patchedUks.sqsh" ${UKSSQSH}
++		mount -o loop=$LOOP,norelatime,nodiratime,noatime -t squashfs ${UKSSQSH} ${ROOT}/etc/uks
++		RET=$?
++	
++		POS=$((POS+1))
++		chown root:root "${UKSSQSH}"
++		chmod 0644 "${UKSSQSH}"
++		make_immutable "${UKSSQSH}"
++	else
++		logmsg "I" "install_touch_update_key" "" "Copying the jailbreak updater key"
++		make_mutable "${ROOT}/etc/uks/pubdevkey01.pem"
++		rm -rf "${ROOT}/etc/uks/pubdevkey01.pem"
++		cat > "${ROOT}/etc/uks/pubdevkey01.pem" << EOF
+ -----BEGIN PUBLIC KEY-----
+ MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDJn1jWU+xxVv/eRKfCPR9e47lP
+ WN2rH33z9QbfnqmCxBRLP6mMjGy6APyycQXg3nPi5fcb75alZo+Oh012HpMe9Lnp
+@@ -531,10 +548,11 @@
+ rvyJnS2MKLG2cczjlQIDAQAB
+ -----END PUBLIC KEY-----
+ EOF
+-	# Harmonize permissions
+-	chown root:root "${ROOT}/etc/uks/pubdevkey01.pem"
+-	chmod 0644 "${ROOT}/etc/uks/pubdevkey01.pem"
+-	make_immutable "${ROOT}/etc/uks/pubdevkey01.pem"
++		# Harmonize permissions
++		chown root:root "${ROOT}/etc/uks/pubdevkey01.pem"
++		chmod 0644 "${ROOT}/etc/uks/pubdevkey01.pem"
++		make_immutable "${ROOT}/etc/uks/pubdevkey01.pem"
++	fi
+ 	mount_ro
+ 
+ 	# Show some feedback
+
+--- bridge	2022-10-02 03:32:37.000000000 +0200
++++ bridgePatched	2023-10-29 11:11:33.035486098 +0100
+@@ -196,7 +196,7 @@
+ 				# PW5...
+ 				IS_PW5="true"
+ 			;;
+-			"22D" | "25T" | "23A" | "2AQ" | "2AP" | "1XH" | "22C" )
++			"22D" | "25T" | "23A" | "2AQ" | "2AP" | "1XH" | "22C" | "23L" | "227" )
+ 				# KS...
+ 				IS_KS="true"
+ 			;;
