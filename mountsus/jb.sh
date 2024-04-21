@@ -74,7 +74,7 @@ POS=$POS+1
 ms_log "Thanks to Marek, Katadelos and NiLuJe for their help"
 ms_log "creating this jailbreak"
 POS=$POS+1
-ms_log "After all, all devices have their dangers. The discovery of speech introduced communication - and lies." # IDK I'll think of something suitable
+ms_log "After all, all devices have their dangers. The discovery of speech introduced communication - and lies."
 
 
 ###
@@ -133,7 +133,7 @@ if [ -f "/etc/uks.sqsh" ] && [ -f "/mnt/us/patchedUks.sqsh" ] ; then
   install_touch_update_key_squash
 
   # Verify key installation
-  if [ "$(md5sum "${ROOT}/etc/uks.sqsh" | awk '{ print $1; }')" == "f62830065dd99921c42c90f6f8347bf5" ] ; then
+  if [ "$(md5sum "${ROOT}/etc/uks.sqsh" | awk '{ print $1; }')" ==  "$(md5sum "${ROOT}/mnt/us/patchedUks.sqsh" | awk '{ print $1; }')" ] ; then
     ms_log "Developer keys installed successfully! (uks.sqsh)"
     ms_log "$(ls /etc/uks)"
   else
