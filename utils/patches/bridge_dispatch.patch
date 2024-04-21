@@ -1,0 +1,24 @@
+--- bridge	2023-12-02 22:24:36.000000000 +0000
++++ bridge_new	2024-04-20 17:47:38.231555800 +0100
+@@ -731,6 +731,7 @@
+ 	mount_root_rw
+ 	logmsg "I" "install_log" "" "Patching in the dispatch command"
+ 	sed -e '/^{/a\' -e '    ";log" : "/usr/bin/logThis.sh",' -i "${ROOT}/usr/share/webkit-1.0/pillow/debug_cmds.json"
++        sed -e '/^{/a\' -e '    ";log" : "/usr/bin/logThis.sh",' -i "${ROOT}/usr/share/app/kpp_sys_cmds.json"
+ 	mount_ro
+ 
+ 	# Show some feedback
+@@ -887,6 +888,13 @@
+ 	fi
+ fi
+ 
++# Check if we need to do something about the dispatch command (NEW)
++if [ -f "${ROOT}/usr/share/app/kpp_sys_cmds.json" ] ; then
++       if ! grep -q "logThis.sh" "${ROOT}/usr/share/app/kpp_sys_cmds.json" ; then
++               install_log
++       fi
++fi
++
+ # Check if we need to do something with the bridge job
+ if [ -f "${MKK_PERSISTENT_STORAGE}/bridge.conf" ] ; then
+ 	if [ ! -f "${ROOT}/etc/upstart/bridge.conf" ] ; then
