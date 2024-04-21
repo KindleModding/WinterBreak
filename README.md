@@ -11,4 +11,4 @@ MountSus is a Kindle jailbreak utilising [Mesquito](https://kindlemodding.github
 6. Click on `Jailbreak Device!`
 7. After the dialog tells you to, close it and click on `VERIFY JAILBREAK`
 8. Wait until it says `Exploit verified! Please Reboot` and reboot your Kindle
-9. Congrats, you are now jailbroken!
+9. Congrats, you are now jailbroken! Please check the Wiki for Post-Jailbreak instructions for MountSus
