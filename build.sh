@@ -20,12 +20,13 @@ echo "* extracting hotfix"
 ./utils/extractHotfix.sh
 rm -rf newHotfix
 mkdir newHotfix
+mv originalHotfix/* newHotfix
 # echo "moving patched uks to the new hotfix"
 # cp patchedUks.sqsh newHotfix
 # echo "patching bridge in the new hotfix" # we don't need to patch it anymore
-# patch originalHotfix/bridge < utils/bridge.patch
-# patch originalHotfix/install-bridge.sh < utils/install-bridge.sh.patch
-mv originalHotfix/* newHotfix
+# patch newHotfix/bridge < utils/patches/bridge.patch
+# patch newHotfix/install-bridge.sh < utils/patches/install-bridge.sh.patch
+patch newHotfix/bridge < utils/patches/bridge_dispatch.patch
 mkdir build
 rm -rf originalHotfix
 echo "* building the new hotfix for the devices specified in the official firmware"
