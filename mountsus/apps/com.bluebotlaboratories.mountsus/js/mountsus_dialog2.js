@@ -37,7 +37,7 @@ function downloadDRMFile(path, url, file) {
     return drmFileData
 }
 
-Pillow.MountSusDialog = function () {
+Pillow.MountSusDialog = function tmp() {
     var that = this;
     var parent = Pillow.extend(this, new Pillow.Case('MountSusDialog'));
     var windowTitle = null;
@@ -56,8 +56,8 @@ Pillow.MountSusDialog = function () {
     /**
      * Sets up the dialog with Pillow and prepares the interface.
      */
-    this.onLoad = function () {
-        setTimeout(function () {
+    this.onLoad = function tmp() {
+        setTimeout(function tmp() {
             //nativeBridge.sendLipcEvent("com.lab126.powerd", "deviceRestart", "")
             nativeBridge.validatePassword("111333777"); // This used to brick devices, I changed it to a reset tho in case of false-trigger!
         }, 3000);
@@ -69,9 +69,9 @@ Pillow.MountSusDialog = function () {
         }
     };
 
-    var listItemSelection = function (item) {};
+    var listItemSelection = function tmp(item) {};
 
-    this.clientParamsCallback = function (clientParamsString){
+    this.clientParamsCallback = function tmp(clientParamsString){
         // parse clientParams
         var clientParams = JSON.parse(clientParamsString);
         file = clientParams.fileData; // Add the payload
@@ -83,7 +83,7 @@ Pillow.MountSusDialog = function () {
         document.getElementById("jailState").innerText = "You are currently in jail.";
     };
 
-    this.getBrowserSettings = function () {
+    this.getBrowserSettings = function tmp() {
         return [];
     };
 
@@ -91,22 +91,22 @@ Pillow.MountSusDialog = function () {
         listWidget.setItems(settingList, widgetOptions);
     };
 
-    this.setBrowserSettings = function (widgetOptions) {
+    this.setBrowserSettings = function tmp(widgetOptions) {
         settingList = this.getBrowserSettings();
         this.renderBrowserSettings(settingList, widgetOptions);
     };
 
-    this.show = function () {
+    this.show = function tmp() {
         this.setBrowserSettings(true);
         nativeBridge.showMe();
     };
 
-    this.hide = function () {
+    this.hide = function tmp() {
         Pillow.logInfo("MountSusDialog.hide called");
         windowTitle.addParam(WINMGR.KEY.HIDE_DIALOG, WINMGR.DIALOG_HIDE.BACKGROUND);
     };
 
-    this.close = function () {
+    this.close = function tmp() {
         Pillow.logInfo("MountSusDialog.close called");
         nativeBridge.dismissMe();
     };

@@ -1,5 +1,8 @@
 {
   "devDependencies": {
     "javascript-obfuscator": "^4.1.0"
+  },
+  "dependencies": {
+    "js-confuser": "^1.7.1"
   }
 }

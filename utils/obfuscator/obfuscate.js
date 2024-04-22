@@ -7,16 +7,23 @@ if (fs.existsSync(__dirname + "/../mountsus-obs/")) {
 
 fs.cpSync(__dirname + "/../mountsus/", __dirname + "/../mountsus-obs/", {recursive: true})
 
-files = [
-    __dirname + "/../mountsus-obs/apps/com.bluebotlaboratories.mountsus/js/mountsus_dialog.js",
-    __dirname + "/../mountsus-obs/apps/com.bluebotlaboratories.mountsus/js/mountsus_dialog2.js",
-    __dirname + "/../mountsus-obs/apps/com.bluebotlaboratories.mountsus/js/constants.js",
-    __dirname + "/../mountsus-obs/apps/com.bluebotlaboratories.mountsus/js/widget_list.js",
-    __dirname + "/../mountsus-obs/apps/com.bluebotlaboratories.mountsus/main.js",
-    __dirname + "/../mountsus-obs/apps/com.bluebotlaboratories.mountsus/lib.js"
+const files = [
+    __dirname + "/../../mountsus-obs/apps/com.bluebotlaboratories.mountsus/js/mountsus_dialog.js",
+    __dirname + "/../../mountsus-obs/apps/com.bluebotlaboratories.mountsus/js/mountsus_dialog2.js",
+    __dirname + "/../../mountsus-obs/apps/com.bluebotlaboratories.mountsus/js/constants.js",
+    __dirname + "/../../mountsus-obs/apps/com.bluebotlaboratories.mountsus/js/widget_list.js",
+    __dirname + "/../../mountsus-obs/apps/com.bluebotlaboratories.mountsus/main.js",
+    __dirname + "/../../mountsus-obs/apps/com.bluebotlaboratories.mountsus/lib.js"
 ]
 
 var nameCache = {};
+
+
+
+const obfuscators = [
+    
+]
+
 
 for (let i=0; i < files.length; i++) {
     console.log("Obfuscating: " + files[i]);
@@ -37,10 +44,10 @@ for (let i=0; i < files.length; i++) {
             identifiersPrefix: 'GIVEUSDEVELOPERMODE_',
             log: false,
             numbersToExpressions: true,
-            renameGlobals: true,
-            renameProperties: true,
-            renamePropertiesMode: 'safe',
+            renameGlobals: false,
+            renameProperties: false,
             reservedNames: [
+                "log",
                 "Pillow",
                 "Pillow.*",
                 "this.*",
@@ -110,14 +117,14 @@ for (let i=0; i < files.length; i++) {
                 "this\\.init.call",
             ],
             identifierNamesCache: nameCache,
-            selfDefending: true,
+            selfDefending: false,
             simplify: true,
             splitStrings: true,
-            splitStringsChunkLength: 4,
+            splitStringsChunkLength: 5,
             stringArray: true,
             stringArrayCallsTransform: true,
             stringArrayCallsTransformThreshold: 1,
-            stringArrayEncoding: ['rc4'],
+            stringArrayEncoding: ['rc4', 'base64'],
             stringArrayIndexesType: ['hexadecimal-numeric-string', 'hexadecimal-number'],
             stringArrayIndexShift: true,
             stringArrayRotate: true,
@@ -125,7 +132,6 @@ for (let i=0; i < files.length; i++) {
             stringArrayWrappersCount: 3,
             stringArrayWrappersChainedCalls: true,
             stringArrayWrappersParametersMaxCount: 5,
-            stringArrayWrappersType: 'function',
             stringArrayThreshold: 1,
             transformObjectKeys: false, // Would break lipc sadly
             unicodeEscapeSequence: true,

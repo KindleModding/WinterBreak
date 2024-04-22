@@ -56,7 +56,7 @@ Pillow.pixelPointRatio = Pillow.dpi / 72;
  * @param points The value in points
  * @returns The value in pixels
  */
-Pillow.pointsToPixels = function (points) {
+Pillow.pointsToPixels = function tmp(points) {
     return Math.floor(points * Pillow.pixelPointRatio);
 };
 
@@ -66,7 +66,7 @@ Pillow.pointsToPixels = function (points) {
  * @param b The other position
  * @returns The sum of the positions
  */
-Pillow.addPositions = function (a, b) {
+Pillow.addPositions = function tmp(a, b) {
     return {x: a.x + b.x, y: a.y + b.y};
 };
 
@@ -75,7 +75,7 @@ Pillow.addPositions = function (a, b) {
  * @param elem The DOM element
  * @returns The relative position of the element in the window
  */
-Pillow.getPositionInWindow = function (elem) {
+Pillow.getPositionInWindow = function tmp(elem) {
     var cur = {x: elem.offsetLeft, y: elem.offsetTop};
     if (elem.offsetParent) {
         cur = Pillow.addPositions(cur, Pillow.getPositionInWindow(elem.offsetParent));
@@ -88,7 +88,7 @@ Pillow.getPositionInWindow = function (elem) {
  * @param elem The DOM element
  * @returns The position of the element on screen
  */
-Pillow.getPositionOnScreen = function (elem) {
+Pillow.getPositionOnScreen = function tmp(elem) {
     return Pillow.addPositions(nativeBridge.getWindowPosition(), Pillow.getPositionInWindow(elem));
 };
 
@@ -96,7 +96,7 @@ Pillow.getPositionOnScreen = function (elem) {
  * Set the size of the window to the size of the given DOM element.
  * @param elem The DOM element
  */
-Pillow.setWindowSizeByElement = function (elem) {
+Pillow.setWindowSizeByElement = function tmp(elem) {
     nativeBridge.setWindowSize(elem.offsetWidth, elem.offsetHeight);
 };
 
@@ -106,7 +106,7 @@ Pillow.setWindowSizeByElement = function (elem) {
  * @param object MacAddress
  *
  */
-Pillow.obfuscateMac48Address = function (macAddress, maskLevel) {
+Pillow.obfuscateMac48Address = function tmp(macAddress, maskLevel) {
     if (!macAddress) {
         return null;
     }
@@ -132,7 +132,7 @@ Pillow.obfuscateMac48Address = function (macAddress, maskLevel) {
  * @param object BT device name.
  *
  */
-Pillow.obfuscateBTName = function ( btName ) {
+Pillow.obfuscateBTName = function tmp( btName ) {
     if (nativeBridge.isProdDevice()) {
         var returnString = "";
         if (btName.length <= 0) {
@@ -151,14 +151,14 @@ Pillow.obfuscateBTName = function ( btName ) {
 /**
  * Obfuscate parts of log line from GM build.
  */
-Pillow.obfus = function ( message ) {
+Pillow.obfus = function tmp( message ) {
     return nativeBridge.obfus( message );
 };
 
 /**
  * Check whether a number is an integer.
  */
-Pillow.isInteger = function (value) {
+Pillow.isInteger = function tmp(value) {
     return ((typeof(value) === 'number') || (value instanceof Number)) &&
         Math.floor(value) === value;
 };
@@ -168,7 +168,7 @@ Pillow.isInteger = function (value) {
  * @param k  (String) The key
  * @param v  The value
  */
-Pillow.setOption = function (k, v) {
+Pillow.setOption = function tmp(k, v) {
     if (typeof(window.pillowCaseOptions) !== 'object') {
         window.pillowCaseOptions = {};
     }
@@ -179,7 +179,7 @@ Pillow.setOption = function (k, v) {
  * Load a script from the given URL.
  * @param url (String) The URL
  */
-Pillow.loadScript = function (url) {
+Pillow.loadScript = function tmp(url) {
     var elem = document.createElement('script');
     elem.src = url;
     document.head.appendChild(elem);
@@ -188,13 +188,13 @@ Pillow.loadScript = function (url) {
 /**
  * Private context for CSS class utilities
  */
-(function () {
+(function tmp() {
 
-    var makeClassRegExp = function (cls) {
+    var makeClassRegExp = function tmp(cls) {
         return RegExp('\\s*\\b' + cls + '\\b\\s*', 'g');
     };
 
-    var getClass = function (elem) {
+    var getClass = function tmp(elem) {
         return elem.getAttribute('class') || '';
     };
 
@@ -206,7 +206,7 @@ Pillow.loadScript = function (url) {
      *
      * Note: don't give the class regexp as a RegExp object. It must be a string.
      */
-    Pillow.hasClass = function (elem, cls) {
+    Pillow.hasClass = function tmp(elem, cls) {
         return Boolean(getClass(elem).match(makeClassRegExp(cls)));
     };
 
@@ -215,7 +215,7 @@ Pillow.loadScript = function (url) {
      * @param elem  (HTMLElement) The DOM element
      * @param cls   (String) The class name
      */
-    Pillow.addClass = function (elem, cls) {
+    Pillow.addClass = function tmp(elem, cls) {
         if (!Pillow.hasClass(elem, cls)) {
             elem.setAttribute('class', getClass(elem) + ' ' + cls);
         }
@@ -231,7 +231,7 @@ Pillow.loadScript = function (url) {
      *
      * Note: don't give the class regexp as a RegExp object. It must be a string.
      */
-    Pillow.removeClass = function (elem, cls) {
+    Pillow.removeClass = function tmp(elem, cls) {
         elem.setAttribute(
             'class',
             (elem.getAttribute('class') || '').replace(makeClassRegExp(cls), ''));
@@ -252,13 +252,13 @@ Pillow.loadScript = function (url) {
  *               specified, the call-time arguments are passed in instead.
  * @returns {Function} A function with context, arguments, or both predetermined
  */
-Pillow.bind = function (context, method, arg1) {
+Pillow.bind = function tmp(context, method, arg1) {
     var storedArguments = Array.prototype.slice.call(arguments, 2);
     if (storedArguments.length === 0) {
         storedArguments = null;
     }
 
-    return function () {
+    return function tmp() {
         if (!context) {
             context = this;
         }
@@ -286,7 +286,7 @@ Pillow.bind = function (context, method, arg1) {
  *                     time you need access to a superclass method to ensure
  *                     the proper context.
  */
-Pillow.extend = function (self, superObject) {
+Pillow.extend = function tmp(self, superObject) {
     for (var property in superObject) {
         if (superObject.hasOwnProperty(property)) {
             self[property] = superObject[property];
@@ -294,7 +294,7 @@ Pillow.extend = function (self, superObject) {
     }
 
     var contexts = {};
-    return function (current) {
+    return function tmp(current) {
         if (contexts[current]) {
             return contexts[current];
         }
@@ -315,7 +315,7 @@ Pillow.extend = function (self, superObject) {
     };
 };
 
-(function () {
+(function tmp() {
     const LOG_MASK_PROP = 'pillowLogMask';
 
     // these are based on LLOG_LEVEL_* in llog.h
@@ -327,7 +327,7 @@ Pillow.extend = function (self, superObject) {
     const LOG_MASK_DEBUG_LOW = 0x00002000;
     const LOG_MASK_DEBUG_PRIVATE = 0x00000040;
 
-    var formatLogParameters = function (kv) {
+    var formatLogParameters = function tmp(kv) {
         if (!kv) {
             return "";
         }
@@ -341,16 +341,16 @@ Pillow.extend = function (self, superObject) {
         return str;
     };
 
-    var makeNiceLogger = function (mask, f) {
-        return function (id, kv, msg) {
+    var makeNiceLogger = function tmp(mask, f) {
+        return function tmp(id, kv, msg) {
             if (window[LOG_MASK_PROP] & mask) {
                 f(id || "pillow-js", formatLogParameters(kv), msg || "");
             }
         };
     };
 
-    var makeNiceDebugLogger = function (mask, f, level) {
-        return function () {
+    var makeNiceDebugLogger = function tmp(mask, f, level) {
+        return function tmp() {
             if (window[LOG_MASK_PROP] & mask) {
                 f(level, Array.prototype.join.call(arguments, ' '));
             }
@@ -393,7 +393,7 @@ Pillow.extend = function (self, superObject) {
      * @param {Number} times
      * @returns {String} The message concatenated the specified number of times
      */
-    var expand = function (message, times) {
+    var expand = function tmp(message, times) {
         return (new Array(times + 1)).join(message);
     };
 
@@ -404,8 +404,8 @@ Pillow.extend = function (self, superObject) {
      * @param {Function} funktion The function to wrap
      * @returns {Function} The wrapped function
      */
-    Pillow.logWrapFunction = function (name, funktion, argNames) {
-        return function () {
+    Pillow.logWrapFunction = function tmp(name, funktion, argNames) {
+        return function tmp() {
             logMethod(expand('+', ++depth), name, 'called');
             var result = funktion.apply(this, arguments);
 
@@ -423,7 +423,7 @@ Pillow.extend = function (self, superObject) {
      * @param {Function} funktion The function to wrap
      * @returns {Function} The wrapped function
      */
-    Pillow.logWrapInner = function (className, functionName, funktion) {
+    Pillow.logWrapInner = function tmp(className, functionName, funktion) {
         return Pillow.logWrapFunction(className + '#(' + functionName + ')',
             funktion);
     };
@@ -437,7 +437,7 @@ Pillow.extend = function (self, superObject) {
      * @param {String[]} [ignore] Names of methods to ignore
      * @param {Boolean} [isStatic=false] Send true if this is a static object
      */
-    Pillow.logWrapObject = function (name, instance, ignore, isStatic) {
+    Pillow.logWrapObject = function tmp(name, instance, ignore, isStatic) {
         var ignoreMap = {};
         while (ignore && ignore.length > 0) {
             ignoreMap[ignore.pop()] = true;
@@ -453,14 +453,14 @@ Pillow.extend = function (self, superObject) {
         }
     };
 
-    Pillow.logUserAction = function (name) {
+    Pillow.logUserAction = function tmp(name) {
         Pillow.logInfo("UserActionInfo", {Action: name});
     };
 
 })();
 
 //This is to escape special characters before creating a RegExp
-(function () {
+(function tmp() {
     // Referring to the table here:
     // https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/regexp
     // these characters should be escaped
@@ -493,20 +493,20 @@ Pillow.extend = function (self, superObject) {
 
     regex = RegExp('[' + specials.join('\\') + ']', 'g');
 
-    Pillow.escapeRegExp = function (str) {
+    Pillow.escapeRegExp = function tmp(str) {
         return str.replace(regex, "\\$&");
     };
 })();
 
 //Log ReadingStreams metrics from Pillow Cases
-(function () {
+(function tmp() {
     var READING_STREAMS_LIPC_SOURCE = "com.lab126.readingstreams";
     var PERFORM_ACTION_PROPERTY = "performAction";
     var ACTION_ID_KEY = "actionID";
     var CONTEXT_KEY = "context";
     var CONTEXT_GLOBAL_PROP_VALUE = "global";
 
-    Pillow.recordReadingStreamsPerformAction = function (actionID) {
+    Pillow.recordReadingStreamsPerformAction = function tmp(actionID) {
         var performActionObject = {};
         performActionObject[CONTEXT_KEY] = CONTEXT_GLOBAL_PROP_VALUE;
         performActionObject[ACTION_ID_KEY] = actionID;
@@ -516,22 +516,22 @@ Pillow.extend = function (self, superObject) {
 
 })();
 
-(function () {
+(function tmp() {
     var BASE_INTERROGATE_FILE = "javascripts/interrogate.js";
     var LOCAL_INTERROGATE_FILE_TEMPLATE = "javascripts/interrogate_PILLOW_CASE.js";
 
-    Pillow.loadInterrogateFiles = function (pillowCaseName) {
+    Pillow.loadInterrogateFiles = function tmp(pillowCaseName) {
         var interrogateElem = document.createElement('script');
         interrogateElem.setAttribute("type", "text/javascript");
         interrogateElem.src = BASE_INTERROGATE_FILE;
 
-        interrogateElem.onload = function () {
+        interrogateElem.onload = function tmp() {
             Pillow.logDbgHigh("Loading local interrogate file " + name);
             var localInterrogateElem = document.createElement('script');
             localInterrogateElem.setAttribute("type", "text/javascript");
             localInterrogateElem.src = LOCAL_INTERROGATE_FILE_TEMPLATE.replace("PILLOW_CASE", pillowCaseName);
 
-            localInterrogateElem.onload = function () {
+            localInterrogateElem.onload = function tmp() {
                 Pillow.logInfo("Finished loading interrogate files for " + pillowCaseName);
                 nativeBridge.setInterrogateFilesLoaded();
                 //Initialize Widgets for pillow case

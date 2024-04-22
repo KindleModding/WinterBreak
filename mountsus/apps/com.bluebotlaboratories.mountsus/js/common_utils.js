@@ -49,7 +49,7 @@ function modifyClassNameElement(element) {
 * "&, <, >, ", ', /" with corresponding html escape
 * characters
 */
-(function () {
+(function tmp() {
     var entityMap = {
         "&": "&amp;",
         "<": "&lt;",
@@ -60,7 +60,7 @@ function modifyClassNameElement(element) {
     };
 
     function escapeHTML() {
-        return this.replace(/[&<>"'\/]/g, function (s) {
+        return this.replace(/[&<>"'\/]/g, function tmp(s) {
             return entityMap[s];
         });
     }

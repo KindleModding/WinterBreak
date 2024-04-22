@@ -166,7 +166,7 @@ const MAC48_DELIMITER = ':';
 
 const BTNAME_MASK = '***';
 
-var addConst = function (o, k, v) {
+var addConst = function tmp(o, k, v) {
     Object.defineProperty(o, k, {value: v, writable: false, configurable: false, enumerable: true});
 };
 
