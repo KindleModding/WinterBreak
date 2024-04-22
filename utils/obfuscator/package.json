@@ -1,5 +1,7 @@
 {
+  "main": "obfuscate.ts",
   "devDependencies": {
+    "@types/node": "^20.12.7",
     "javascript-obfuscator": "^4.1.0"
   },
   "dependencies": {

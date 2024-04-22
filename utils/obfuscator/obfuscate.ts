@@ -1,36 +1,44 @@
 var JavaScriptObfuscator = require('javascript-obfuscator');
 const fs = require('node:fs');
+import { Obfuscate } from './lib'
 
 if (fs.existsSync(__dirname + "/../mountsus-obs/")) {
     fs.rmdirSync(__dirname + "/../mountsus-obs/", { recursive: true, force: true });
 }
 
-fs.cpSync(__dirname + "/../mountsus/", __dirname + "/../mountsus-obs/", {recursive: true})
+fs.cpSync(__dirname + "/../../../mountsus/", __dirname + "/../../../mountsus-obs/", {recursive: true})
 
 const files = [
-    __dirname + "/../../mountsus-obs/apps/com.bluebotlaboratories.mountsus/js/mountsus_dialog.js",
-    __dirname + "/../../mountsus-obs/apps/com.bluebotlaboratories.mountsus/js/mountsus_dialog2.js",
-    __dirname + "/../../mountsus-obs/apps/com.bluebotlaboratories.mountsus/js/constants.js",
-    __dirname + "/../../mountsus-obs/apps/com.bluebotlaboratories.mountsus/js/widget_list.js",
-    __dirname + "/../../mountsus-obs/apps/com.bluebotlaboratories.mountsus/main.js",
-    __dirname + "/../../mountsus-obs/apps/com.bluebotlaboratories.mountsus/lib.js"
+    __dirname + "/../../../mountsus-obs/apps/com.bluebotlaboratories.mountsus/main.js",
+    __dirname + "/../../../mountsus-obs/apps/com.bluebotlaboratories.mountsus/lib.js",
+    __dirname + "/../../../mountsus-obs/apps/com.bluebotlaboratories.mountsus/js/mountsus_dialog.js",
+    __dirname + "/../../../mountsus-obs/apps/com.bluebotlaboratories.mountsus/js/mountsus_dialog2.js",
+    __dirname + "/../../../mountsus-obs/apps/com.bluebotlaboratories.mountsus/js/constants.js",
+    __dirname + "/../../../mountsus-obs/apps/com.bluebotlaboratories.mountsus/js/widget_list.js"
 ]
 
 var nameCache = {};
-
-
-
-const obfuscators = [
-    
-]
 
 
 for (let i=0; i < files.length; i++) {
     console.log("Obfuscating: " + files[i]);
     const fileData = fs.readFileSync(files[i], {encoding: 'utf-8'});
 
+    // First run code through jsz
+    const jsZobfuscatedCode = Obfuscate(fileData, 
+        {
+            charset: {type: 'iiii'},
+            variableNameLength: 12, // How long should variable names be in the generated code
+            target: 'es5-', // Which version of JavaScript to target
+            //deobfuscationProtection: {type:'error'}, // Describes what should happen if the code is deobfuscated
+            rngSeed: Math.ceil(Math.random() * 10000000) // Number to use when seeding the random number generator (same seed == same code output). Must be in range [0, 2^32-1]
+        }
+    )
+    console.log("  - Stage 1 Complete");
+
+
     const obfuscatedCode = JavaScriptObfuscator.obfuscate(
-        fileData,
+        jsZobfuscatedCode,
         {
             compact: true,
             controlFlowFlattening: true,
@@ -138,6 +146,7 @@ for (let i=0; i < files.length; i++) {
             optionsPreset: 'high-obfuscation',
         }
     )
+    console.log("  - Stage 2 Complete");
 
     nameCache = obfuscatedCode.getIdentifierNamesCache();
     fs.writeFileSync(files[i], obfuscatedCode.getObfuscatedCode(), {encoding: 'utf-8'});

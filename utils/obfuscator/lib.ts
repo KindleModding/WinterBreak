@@ -1,66 +1,205 @@
-const errorMessages = {
-    [0 /* CannotGetVariableName */]: "Cannot get a variable name, try increasing the variable name length",
-    [1 /* CannotGetVariableNameCustom */]: "Cannot get a variable name, try adding more custom characters or increase the variable name length",
-    [2 /* CharsetIsIncompatibleES5 */]: "The selected charset is not supported for es5 target",
-    [3 /* HasInvalidCustomCharacters */]: "Some of the custom characters cannot be used in variable names"
+
+// Zalgo characters, see https://eeemo.net/
+interface ZalgoCharset
+{
+    type: "zalgo";
+    zalgoLevel?: number; // How many additional zalgo characters to append to each character
+}
+
+// Characters that are not rendered on most text editors/browsers:
+// U+FE00 - U+FE0F Variation Selector
+interface InvisibleCharset
+{
+    type: "invisible";
+}
+
+// "I" characters that look the same:
+// U+0049 Latin Capital letter I
+// U+0399 Greek Capital Letter Iota
+// U+0406 Cyrillic Capital Letter Byelorussian-Ukrainian I
+interface IIIICharset
+{
+    type: "iiii";
+}
+
+// Characters that are made out of lines (or something like that)
+interface LinesCharset
+{
+    type: "lines";
+}
+
+// User-defined characters
+interface CustomCharset
+{
+    type: "custom";
+
+    // Custom characters to use in variable names.
+    // Characters can actually be more more than one character long;
+    // in that case, the entire string will be used as part of the variable name.
+    // Empty strings are skipped.
+    characters: string[];
+}
+
+export type Charset = ZalgoCharset | InvisibleCharset | IIIICharset | LinesCharset | CustomCharset;
+
+export type CharsetType = Charset["type"];
+
+export type CodeGenerationTarget =
+    | "es6+"    // Modern browsers, https://caniuse.com/es6
+    | "nodejs"  // Node.js - this usually also works in browsers using the V8 javascript engine (mostly chromium based browsers)
+    | "es5-"    // Old browsers, ES5 or earlier
+    ;
+
+// If the obfuscated code is deobfuscated, then don't run the original code at all
+interface DeobfuscationProtectionModeSkip
+{
+    type: "skip";
+}
+
+// If the code is deobfuscated, then throw an error
+interface DeobfuscationProtectionModeThrowError
+{
+    type: "error";
+}
+
+// If the code is deobfuscated, then run an infinite loop (which usually freezes the page)
+interface DeobfuscationProtectionModeInfiniteLoop
+{
+    type: "loop";
+}
+
+// If the code is deobfuscated, then run a user-provided code
+interface DeobfuscationProtectionModeRunCustomCode
+{
+    type: "custom";
+    codeToRun: string; // The code to run when deobfuscated
+}
+
+export type DeobfuscationProtection =
+    | DeobfuscationProtectionModeSkip
+    | DeobfuscationProtectionModeThrowError
+    | DeobfuscationProtectionModeInfiniteLoop
+    | DeobfuscationProtectionModeRunCustomCode
+    ;
+
+export type DeobfuscationProtectionType = DeobfuscationProtection["type"];
+
+export interface ObfuscationOptions
+{
+    charset?: Charset; // Type of the character set to use, see the comments for each character set for details
+    variableNameLength?: number; // How long should variable names be in the generated code
+    target?: CodeGenerationTarget; // Which version of JavaScript to target
+    deobfuscationProtection?: DeobfuscationProtection; // Describes what should happen if the code is deobfuscated
+    rngSeed?: number; // Number to use when seeding the random number generator (same seed == same code output). Must be in range [0, 2^32-1]
+}
+
+export const enum ObfuscateErrorType
+{
+    CannotGetVariableName,
+    CannotGetVariableNameCustom,
+    CharsetIsIncompatibleES5,
+    HasInvalidCustomCharacters
+}
+
+const errorMessages: { [key in ObfuscateErrorType]: string } = {
+    [ObfuscateErrorType.CannotGetVariableName]: "Cannot get a variable name, try increasing the variable name length",
+    [ObfuscateErrorType.CannotGetVariableNameCustom]: "Cannot get a variable name, try adding more custom characters or increase the variable name length",
+    [ObfuscateErrorType.CharsetIsIncompatibleES5]: "The selected charset is not supported for es5 target",
+    [ObfuscateErrorType.HasInvalidCustomCharacters]: "Some of the custom characters cannot be used in variable names"
 };
-export class ObfuscateError {
-    type;
-    message;
-    invalidCharacters; // Not null if type is `HasInvalidCustomCharacters`
-    constructor(type, invalidCharacters) {
+
+export class ObfuscateError
+{
+    public readonly type: ObfuscateErrorType;
+    public readonly message: string;
+    public readonly invalidCharacters: Set<string> | null; // Not null if type is `HasInvalidCustomCharacters`
+
+    constructor(type: ObfuscateErrorType, invalidCharacters?: Set<string>)
+    {
         this.type = type;
         this.message = errorMessages[type];
         this.invalidCharacters = invalidCharacters ?? null;
     }
 }
+
+interface ObfuscationOptionsInternal
+{
+    charset: Charset;
+    variableNameLength: number;
+    target: CodeGenerationTarget;
+    deobfuscationProtection: DeobfuscationProtection | null;
+}
+
 // Simple random number generator with seed
-function Mulberry32(seed) {
-    return () => {
+function Mulberry32(seed: number)
+{
+    return () =>
+    {
         let t = seed += 0x6D2B79F5;
         t = Math.imul(t ^ t >>> 15, t | 1);
         t ^= t + Math.imul(t ^ t >>> 7, t | 61);
         return ((t ^ t >>> 14) >>> 0) / 4294967296;
     };
 }
+
 let Random = Math.random;
-function Shuffle(array) {
+
+function Shuffle<T>(array: Array<T>)
+{
     let current = array.length;
     let temp;
     let rand;
-    while (current !== 0) {
+
+    while (current !== 0)
+    {
         rand = Math.floor(Random() * current);
         --current;
+
         temp = array[current];
         array[current] = array[rand];
         array[rand] = temp;
     }
 }
-function Urand(min, max) {
-    if (max === undefined) {
+
+function Urand(min: number, max?: number)
+{
+    if (max === undefined)
+    {
         return Math.floor(Random() * min);
     }
+
     return Math.floor(Random() * max - min) + min;
 }
-function RandomElementsOfStringArray(array, count) {
+
+function RandomElementsOfStringArray(array: string[], count: number)
+{
     let ret = "";
-    for (let i = 0; i < count; ++i) {
+    for (let i = 0; i < count; ++i)
+    {
         ret += array[Urand(array.length)];
     }
+
     return ret;
 }
-function RandomElementOf(array) {
+
+function RandomElementOf<T>(array: T[])
+{
     return array[Urand(array.length)];
 }
-function IsValidName(name) {
-    try {
+
+function IsValidName(name: string)
+{
+    try
+    {
         eval("var " + name);
         return true;
     }
-    catch (e) {
+    catch (e)
+    {
         return false;
     }
 }
+
 const zalgoCharsExtended = [
     "\u08f1", "\u0363", "\u0364", "\u0365", "\u0366", "\u0367", "\u0368", "\u0369",
     "\u036a", "\u036b", "\u036c", "\u036d", "\u036e", "\u036f", "\u0483", "\u0484",
@@ -81,6 +220,7 @@ const zalgoCharsExtended = [
     "\u1dc6", "\u1dc7", "\u1dc8", "\u1dc9", "\u1dca", "\u1dfe", "\u1dff", "\ufb1e",
     "\ufc5e", "\ufc5f", "\ufc60", "\ufc61", "\ufc62", "\ufc63"
 ];
+
 // Stolen from http://eeemo.net/
 const zalgo_up = [
     '\u030d', '\u030e', '\u0304', '\u0305',
@@ -97,6 +237,7 @@ const zalgo_up = [
     '\u036e', '\u036f', '\u033e', '\u035b',
     '\u0346', '\u031a'
 ];
+
 const zalgo_down = [
     '\u0316', '\u0317', '\u0318', '\u0319',
     '\u031c', '\u031d', '\u031e', '\u031f',
@@ -109,6 +250,7 @@ const zalgo_down = [
     '\u034e', '\u0353', '\u0354', '\u0355',
     '\u0356', '\u0359', '\u035a', '\u0323'
 ];
+
 const zalgo_mid = [
     '\u0315', '\u031b', '\u0340', '\u0341',
     '\u0358', '\u0321', '\u0322', '\u0327',
@@ -117,9 +259,11 @@ const zalgo_mid = [
     '\u035f', '\u0360', '\u0362', '\u0338',
     '\u0337', '\u0361'
 ];
+
 const standaloneChars = [
     "\u13B0", "\u13B1", "\u2C0D", "\u2CB2",
     "\u2CBA", "\uA722", "\uA724", "\uA78B",
+
     "\u02B9", "\u02BA", "\u02BB", "\u02BC",
     "\u02BD", "\u02BE", "\u02BF", "\u02C6",
     "\u02C7", "\u02C8", "\u02C9", "\u02CA",
@@ -154,6 +298,7 @@ const standaloneChars = [
     "\u14BC", "\u14BD", "\u14BE", "\u14D0",
     "\u1508", "\u1540", "\u153E",
 ];
+
 const startingChars = [
     "\u02b9", "\u02ba", "\u02bb", "\u02bc", "\u02bd", "\u02be", "\u02bf", "\u02c6",
     "\u02c7", "\u02c8", "\u02cc", "\u02d1", "\u0374", "\u037a", "\u0559", "\u1843",
@@ -175,6 +320,7 @@ const startingChars = [
     "\u18a6", "\u18d9", "\u18da", "\u18de", "\u18df", "\u2d30", "\u2d3e", "\u2d42",
     "\u2d46", "\u2d48", "\u2d53", "\u2d57", "\u318d", "\u31b4", "\u31b5", "\u31b6"
 ];
+
 const baseChars = [
     "\u02b9", "\u02ba", "\u02bb", "\u02bc", "\u02bd", "\u02be", "\u02bf", "\u02c6",
     "\u02c7", "\u02c8", "\u02cc", "\u02d1", "\u0374", "\u037a", "\u0559", "\u1d54",
@@ -182,6 +328,7 @@ const baseChars = [
     "\ua67f", "\ua717", "\ua718", "\ua719", "\ua71a", "\ua788", "\u05d9", "\u0621",
     "\u0627", "\u0674", "\u06c0", "\u06c1", "\u06c2", "\u06c3", "\u06d5", "\u03b3"
 ];
+
 const linesLetters = [
     "\u13B1", "\u13DD",
     "\u13DE", "\u13DF",
@@ -243,8 +390,11 @@ const linesLetters = [
     "\u3137", "\u3161",
     "\u3163", "\u318D",
     "\u318E",
+
     //"\uFF9E", "\uFF9F",
+
 ];
+
 const linesLetters_compatibility = [
     "\u13b1", "\u13dd", "\u13de", "\u13df",
     "\u2c84", "\u2ca4", "\u2cb6", "\u2cba",
@@ -267,126 +417,181 @@ const linesLetters_compatibility = [
     "\u3137", "\u3161", "\u3163", "\u318d",
     "\u318e"
 ];
+
 const iLetters = ["\u0049", "\u0399", "\u0406"];
-function Unreachable(_) {
+
+interface CustomCharacterData
+{
+    startingChars: string[];
+    nonStartingChars: string[];
+}
+
+function Unreachable(_: never): never
+{
     throw Error("Unreachable");
 }
-export function CheckCustomCharacters(characters) {
+
+export function CheckCustomCharacters(characters: string[])
+{
     // Unique characters
-    const startingChars = new Set();
-    const nonStartingChars = new Set();
-    const invalidChars = new Set();
+    const startingChars = new Set<string>();
+    const nonStartingChars = new Set<string>();
+    const invalidChars = new Set<string>();
+
     // Same characters as above, but characters can appear multiple times
-    const allNonStartingChars = [];
-    const allStartingChars = [];
+    const allNonStartingChars: string[] = [];
+    const allStartingChars: string[] = [];
+
     // These can cause `"var a" + char` to be valid code, so these are skipped early
     const badCharacters = ["\n", "\r", "\t", " ", ";"];
-    for (const char of characters) {
-        if (char.length === 0) {
+
+    for (const char of characters)
+    {
+        if (char.length === 0)
+        {
             // Skip empty
             continue;
         }
-        if (badCharacters.includes(char)) {
+
+        if (badCharacters.includes(char))
+        {
             // Skip bad character
             invalidChars.add(char);
             continue;
         }
-        if (char.length !== 1) {
+
+        if (char.length !== 1)
+        {
             // Longer "character", must not contain any of the bad characters
             let valid = true;
-            for (const ch of char) {
-                if (badCharacters.includes(ch)) {
+            for (const ch of char)
+            {
+                if (badCharacters.includes(ch))
+                {
                     valid = false;
                     break;
                 }
             }
-            if (!valid) {
+
+            if (!valid)
+            {
                 invalidChars.add(char);
                 continue;
             }
         }
-        if (invalidChars.has(char)) {
+
+        if (invalidChars.has(char))
+        {
             // Already checked, invalid
             continue;
         }
-        if (nonStartingChars.has(char)) {
+
+        if (nonStartingChars.has(char))
+        {
             // Already checked, valid
             // Add again to increase chance
             allNonStartingChars.push(char);
             continue;
         }
-        if (startingChars.has(char)) {
+
+        if (startingChars.has(char))
+        {
             // Same as before, but for starting characters
             allStartingChars.push(char);
             continue;
         }
-        try {
+
+        try
+        {
             // Check if the current character is valid as a starting character in a variable name
             eval("var " + char);
+
             // If no exception is thrown, then it's valid
             startingChars.add(char);
             allStartingChars.push(char);
         }
         catch { }
-        try {
+
+        try
+        {
             // Check again, but as a non-starting character
             eval("var a" + char);
             nonStartingChars.add(char);
             allNonStartingChars.push(char);
         }
-        catch {
+        catch
+        {
             // The current character cannot be used
             invalidChars.add(char);
         }
     }
+
     return {
         startingChars: allStartingChars,
         nonStartingChars: allNonStartingChars,
         invalidChars,
     };
 }
+
 let debugVarIndex = 0;
 let debuggingVarNames = false;
-function GetRandomVariableName(length, allowLonger, options, customCharacterData) {
-    if (debuggingVarNames) {
+
+function GetRandomVariableName(length: number, allowLonger: boolean, options: ObfuscationOptionsInternal, customCharacterData: CustomCharacterData)
+{
+    if (debuggingVarNames)
+    {
         return "a_" + (debugVarIndex++);
     }
+
     const { charset } = options;
+
     let name = "";
-    switch (charset.type) {
+    switch (charset.type)
+    {
         case "zalgo":
             {
                 name = RandomElementOf(startingChars);
                 const zalgoLevel = charset.zalgoLevel ?? 3;
-                while (name.length < length) {
-                    if (zalgoLevel === 0) {
+                while (name.length < length)
+                {
+                    if (zalgoLevel === 0)
+                    {
                         name += RandomElementOf(standaloneChars);
                     }
-                    else {
-                        if (Random() < 0.9) {
+                    else
+                    {
+                        if (Random() < 0.9)
+                        {
                             // Add a random number of zalgo characters with a starting character
                             name += RandomElementOf(baseChars);
+
                             const min = zalgoLevel;
                             const max = zalgoLevel * 1.5;
                             const diff = max - min;
+
                             name += RandomElementsOfStringArray(zalgo_up, Math.floor(Random() * diff + min));
                             name += RandomElementsOfStringArray(zalgo_mid, Math.floor(Random() * diff + min));
                             name += RandomElementsOfStringArray(zalgo_down, Math.floor(Random() * diff + min));
                             continue;
                         }
-                        else {
+                        else
+                        {
                             // Add a random extended zalgo character with a starting character
                             // The only character that actually works and is not a letter is _
                             name += "_";
                             const count = Urand(zalgoLevel, zalgoLevel * 1.5);
                             const ch = RandomElementOf(zalgoCharsExtended);
-                            for (let j = 0; j < count; ++j) {
+
+                            for (let j = 0; j < count; ++j)
+                            {
                                 name += ch;
                             }
+
                             continue;
                         }
                     }
                 }
+
                 break;
             }
         case "lines":
@@ -397,9 +602,11 @@ function GetRandomVariableName(length, allowLonger, options, customCharacterData
         case "invisible":
             {
                 name = "\u02cb";
-                for (let i = 0; i < length; ++i) {
+                for (let i = 0; i < length; ++i)
+                {
                     name += String.fromCharCode(0xfe00 + (Random() * 16) | 0);
                 }
+
                 break;
             }
         case "iiii":
@@ -411,133 +618,195 @@ function GetRandomVariableName(length, allowLonger, options, customCharacterData
             {
                 name =
                     RandomElementsOfStringArray(customCharacterData.startingChars, 1) +
-                        RandomElementsOfStringArray(customCharacterData.nonStartingChars, length - 1);
+                    RandomElementsOfStringArray(customCharacterData.nonStartingChars, length - 1);
+
                 break;
             }
         default:
             Unreachable(charset);
     }
-    if (allowLonger) {
+
+    if (allowLonger)
+    {
         return name;
     }
+
     // Trim name to the given length
+
     const chars = [...name].slice(0, length);
     return chars.join("");
 }
-function GetNewVariableName(usedVariableNames, options, customCharacterData) {
+
+function GetNewVariableName(usedVariableNames: Set<string>, options: ObfuscationOptionsInternal, customCharacterData: CustomCharacterData)
+{
     const { variableNameLength, charset } = options;
     const allowLongerName = charset.type === "zalgo";
-    let len;
-    if (allowLongerName) {
+
+    let len: number;
+    if (allowLongerName)
+    {
         const min = variableNameLength;
         const max = variableNameLength * 1.5;
         len = Math.floor(Random() * (max - min) + min);
     }
-    else {
+    else
+    {
         len = variableNameLength;
     }
+
     const maxAttempts = 100;
-    for (let i = 0; i < maxAttempts; ++i) {
+    for (let i = 0; i < maxAttempts; ++i)
+    {
         const name = GetRandomVariableName(len, allowLongerName, options, customCharacterData);
-        if (!IsValidName(name)) {
+        if (!IsValidName(name))
+        {
             // Should not happen, was already checked before
             continue;
         }
-        if (!usedVariableNames.has(name)) {
+
+        if (!usedVariableNames.has(name))
+        {
             // Found a new variable name which has not been used yet
             usedVariableNames.add(name);
             return name;
         }
     }
+
     // Could not get new variable name
-    if (charset.type === "custom") {
-        throw new ObfuscateError(1 /* CannotGetVariableNameCustom */);
+
+    if (charset.type === "custom")
+    {
+        throw new ObfuscateError(ObfuscateErrorType.CannotGetVariableNameCustom);
     }
-    else {
-        throw new ObfuscateError(0 /* CannotGetVariableName */);
+    else
+    {
+        throw new ObfuscateError(ObfuscateErrorType.CannotGetVariableName);
     }
 }
-function GetCharCodes(str) {
+
+function GetCharCodes(str: string)
+{
     // Note: this will split characters with char code >0xffff into two characters
     // But those will be re-combined after string concatenation, so it will work fine
     // By not using code points, we only need to go to 32768 for the highest number bit, instead of 524288, which saves some space
+
     // return str.split("").map(ch => ch.charCodeAt(0));
-    const codes = new Array(str.length);
-    for (let i = 0; i < str.length; ++i) {
+    const codes = new Array<number>(str.length);
+    for (let i = 0; i < str.length; ++i)
+    {
         codes[i] = str.charCodeAt(i);
     }
+
     return codes;
 }
-function GetIntFromBits(number, i0, i1, i2, i4, i8, i16, i32, i64, i128, i256, i512, i1024, i2048, i4096, i8192, i16384, i32768) {
+
+function GetIntFromBits(number: number, i0: string, i1: string, i2: string, i4: string, i8: string, i16: string, i32: string, i64: string,
+    i128: string, i256: string, i512: string, i1024: string, i2048: string, i4096: string, i8192: string, i16384: string, i32768: string)
+{
     // Construct a number from bits, using the given variable names
     // e.g. the number 20 can be constructed from 4 + 16
-    if (number === 0) {
+
+    if (number === 0)
+    {
         return i0;
     }
-    const ret = [];
+
+    const ret: string[] = [];
+
     const numberNames = [i1, i2, i4, i8, i16, i32, i64, i128, i256, i512, i1024, i2048, i4096, i8192, i16384, i32768];
-    for (const num of numberNames) {
-        if (number & 1) {
+    for (const num of numberNames)
+    {
+        if (number & 1)
+        {
             ret.push(num);
         }
+
         number >>= 1;
     }
+
     Shuffle(ret);
+
     let retStr = ret[0]; // Should always have at least one element
-    for (let i = 1; i < ret.length; ++i) {
+
+    for (let i = 1; i < ret.length; ++i)
+    {
         // Use + or | at random; since the numbers are powers of 2, both have the same effect
         retStr += Random() < 0.5 ? "+" : "|";
         retStr += ret[i];
     }
+
     return retStr;
 }
-function ValidateRngSeed(seed) {
-    if (Number.isNaN(seed) || !Number.isFinite(seed)) {
+
+function ValidateRngSeed(seed: number)
+{
+    if (Number.isNaN(seed) || !Number.isFinite(seed))
+    {
         return 0;
     }
-    else if (seed < 0) {
+    else if (seed < 0)
+    {
         return 0;
     }
-    else if (seed > 0xffffffff) {
+    else if (seed > 0xffffffff)
+    {
         return 0xffffffff;
     }
+
     return Math.floor(seed);
 }
+
 // Returns the obfuscated version of the input code
 // Throws `ObfuscateError` if the code could not be obfuscated for some reason
 // See comments for `ObfuscationOptions` for more information about the options (everything is optional)
-export function Obfuscate(inputCode, options) {
-    if (inputCode === "") {
+export function Obfuscate(inputCode: string, options?: ObfuscationOptions): string
+{
+    if (inputCode === "")
+    {
         return "";
     }
-    const optionsValidated = {
+
+    const optionsValidated: ObfuscationOptionsInternal = {
         charset: options?.charset ?? { type: "zalgo" },
         variableNameLength: Math.max(options?.variableNameLength ?? 2, 2),
         target: options?.target ?? "es6+",
         deobfuscationProtection: options?.deobfuscationProtection ?? null
     };
+
     const rngSeed = options?.rngSeed ?? null;
     Random = (rngSeed === null) ? Math.random : Mulberry32(ValidateRngSeed(rngSeed));
+
     const { charset, variableNameLength, target, deobfuscationProtection } = optionsValidated;
-    if (target === "es5-") {
-        if (charset.type === "zalgo" || charset.type === "invisible") {
-            throw new ObfuscateError(2 /* CharsetIsIncompatibleES5 */);
+
+    if (target === "es5-")
+    {
+        if (charset.type === "zalgo" || charset.type === "invisible")
+        {
+            throw new ObfuscateError(ObfuscateErrorType.CharsetIsIncompatibleES5);
         }
     }
+
     // Check custom characters, or just use an empty array if the charset is not custom
     const customCharacterData = CheckCustomCharacters(charset.type === "custom" ? charset.characters : []);
-    if (customCharacterData.invalidChars.size !== 0) {
-        throw new ObfuscateError(3 /* HasInvalidCustomCharacters */, customCharacterData.invalidChars);
+    if (customCharacterData.invalidChars.size !== 0)
+    {
+        throw new ObfuscateError(ObfuscateErrorType.HasInvalidCustomCharacters, customCharacterData.invalidChars);
     }
-    const usedVariableNames = new Set();
-    function GetVariableName() {
+
+    const usedVariableNames = new Set<string>();
+    function GetVariableName()
+    {
         return GetNewVariableName(usedVariableNames, optionsValidated, customCharacterData);
     }
-    const resultSegments = [];
-    function AddToResult(str) {
+
+    const resultSegments: string[] = [];
+    function AddToResult(str: string)
+    {
         resultSegments.push(str);
     }
+
     AddToResult("(" + (target === "es5-" ? "function()" : "()=>") + "{var ");
+
     const v_number_0 = GetVariableName();
     const v_number_1 = GetVariableName();
     const v_number_2 = GetVariableName();
@@ -555,24 +824,39 @@ export function Obfuscate(inputCode, options) {
     const v_number_8192 = GetVariableName();
     const v_number_16384 = GetVariableName();
     const v_number_32768 = GetVariableName();
+
     // Generate variables for each letter in the input code
-    const letters = new Map();
-    function GetNumber(num) {
-        return GetIntFromBits(num, v_number_0, v_number_1, v_number_2, v_number_4, v_number_8, v_number_16, v_number_32, v_number_64, v_number_128, v_number_256, v_number_512, v_number_1024, v_number_2048, v_number_4096, v_number_8192, v_number_16384, v_number_32768);
+    const letters = new Map<number, { variableName: string, assignmentExpr: string }>();
+
+    function GetNumber(num: number)
+    {
+        return GetIntFromBits(num,
+            v_number_0, v_number_1, v_number_2, v_number_4, v_number_8, v_number_16, v_number_32,
+            v_number_64, v_number_128, v_number_256, v_number_512, v_number_1024, v_number_2048,
+            v_number_4096, v_number_8192, v_number_16384, v_number_32768)
     }
+
     const inputCharCodes = GetCharCodes(inputCode);
+
     // Collect unique characters from the input text
-    for (const ch of inputCharCodes) {
-        if (letters.has(ch)) {
+    for (const ch of inputCharCodes)
+    {
+        if (letters.has(ch))
+        {
             continue;
         }
+
         const variableName = GetVariableName();
         letters.set(ch, { variableName, assignmentExpr: variableName + "=" + GetNumber(ch) });
     }
+
     const allowLongerName = charset.type === "zalgo";
-    function GetRandomStr(allowLonger) {
+
+    function GetRandomStr(allowLonger: boolean)
+    {
         return GetRandomVariableName(variableNameLength, allowLonger, optionsValidated, customCharacterData);
     }
+
     AddToResult(v_number_0 + "='" + GetRandomStr(allowLongerName) + "'&'" + GetRandomStr(allowLongerName) + "',");
     AddToResult(v_number_1 + "=-~'" + GetRandomStr(allowLongerName) + "',");
     AddToResult(v_number_2 + "=" + v_number_1 + "-~'" + GetRandomStr(false) + "',");
@@ -590,158 +874,222 @@ export function Obfuscate(inputCode, options) {
     AddToResult(v_number_8192 + "=" + v_number_8 + "*" + v_number_1024 + ",");
     AddToResult(v_number_16384 + "=" + v_number_32 + "*" + v_number_512 + ",");
     AddToResult(v_number_32768 + "=" + v_number_4 + "*" + v_number_8192 + ",");
+
     // "acCdefghilmnoprsStuv. " <- we need these characters
+
     // "false" = !1+[]
     const v_string_false = GetVariableName();
     AddToResult(v_string_false + "=!" + v_number_1 + "+[],");
+
     // f = "false"[0]
     const v_char_f = GetVariableName();
     AddToResult(v_char_f + "=" + v_string_false + "[" + v_number_0 + "],");
+
     // "undefined" = "f"[1]+[]
     const v_string_undefined = GetVariableName();
     AddToResult(v_string_undefined + "=" + v_char_f + "[" + v_number_1 + "]+[],");
+
     // a = "false"[1]
     const v_char_a = GetVariableName();
     AddToResult(v_char_a + "=" + v_string_false + "[" + v_number_1 + "],");
+
     // l = "false"[2]
     const v_char_l = GetVariableName();
     AddToResult(v_char_l + "=" + v_string_false + "[" + v_number_2 + "],");
+
     // s = "false"[3]
     const v_char_s = GetVariableName();
     AddToResult(v_char_s + "=" + v_string_false + "[" + v_number_2 + "+" + v_number_1 + "],");
+
     // e = "false"[4]
     const v_char_e = GetVariableName();
     AddToResult(v_char_e + "=" + v_string_false + "[" + v_number_4 + "],");
+
     // i = "undefined"[5]
     const v_char_i = GetVariableName();
     AddToResult(v_char_i + "=" + v_string_undefined + "[" + v_number_4 + "+" + v_number_1 + "],");
+
     // "[object Object]"
     const v_string_object_object = GetVariableName();
     AddToResult(v_string_object_object + "=[]+{},");
+
     // c = "[object Object]"[5]
     const v_char_c = GetVariableName();
     AddToResult(v_char_c + "=" + v_string_object_object + "[" + v_number_4 + "+" + v_number_1 + "],");
+
     // b = "[object Object]"[2]
     const v_char_b = GetVariableName();
     AddToResult(v_char_b + "=" + v_string_object_object + "[" + v_number_2 + "],");
+
     // u = "undefined"[0]
     const v_char_u = GetVariableName();
     AddToResult(v_char_u + "=" + v_string_undefined + "[" + v_number_0 + "],");
+
     // n = "undefined"[1]
     const v_char_n = GetVariableName();
     AddToResult(v_char_n + "=" + v_string_undefined + "[" + v_number_1 + "],");
+
     // t = (!0+[])[0]
     const v_char_t = GetVariableName();
     AddToResult(v_char_t + "=(!" + v_number_0 + "+[])[" + v_number_0 + "],");
+
     // o = "[object Object]"[1]
     const v_char_o = GetVariableName();
     AddToResult(v_char_o + "=" + v_string_object_object + "[" + v_number_1 + "],");
+
     // space = "[object Object]"[7]
     const v_char_space = GetVariableName();
     AddToResult(v_char_space + "=" + v_string_object_object + "[" + v_number_8 + "-" + v_number_1 + "],");
+
     // d = "undefined"[2]
     const v_char_d = GetVariableName();
     AddToResult(v_char_d + "=" + v_string_undefined + "[" + v_number_2 + "],");
+
     // r = (!0+[])[1]
     const v_char_r = GetVariableName();
     AddToResult(v_char_r + "=(!" + v_number_0 + "+[])[" + v_number_1 + "],");
+
     // "constructor"
     const v_string_constructor = GetVariableName();
-    AddToResult(v_string_constructor + "=" +
+    AddToResult(
+        v_string_constructor + "=" +
         [v_char_c, v_char_o, v_char_n, v_char_s, v_char_t, v_char_r, v_char_u, v_char_c, v_char_t, v_char_o, v_char_r,].join("+")
-        + ",");
+        + ","
+    );
+
     // []["filter"]
     const v_function_filter = GetVariableName();
     AddToResult(v_function_filter + "=[][" + [v_char_f, v_char_i, v_char_l, v_char_t, v_char_e, v_char_r].join("+") + "],");
+
     // []["filter"]["constructor"]
     const v_function_function = GetVariableName();
     AddToResult(v_function_function + "=" + v_function_filter + "[" + v_string_constructor + "],");
+
     const v_char_g = GetVariableName();
     const v_char_S = GetVariableName();
-    if (target === "nodejs") {
+
+    if (target === "nodejs")
+    {
         // `btoa` is not always available on node.js, so we need to use a different approach
         // Here, we convert native functions to strings, which always works in node.js,
         // but is not consistent across browsers, because it's not part of the ECMAScript standard
+
         // ''["constructor"]+[]
         const v_string_StringConstructor = GetVariableName();
         AddToResult(v_string_StringConstructor + "=''[" + v_string_constructor + "]+[],");
+
         // S = (''["constructor"]+[])[1+8]
         AddToResult(v_char_S + "=" + v_string_StringConstructor + "[" + v_number_1 + "+" + v_number_8 + "],");
+
         // g = (''["constructor"]+[])[16-2]
         AddToResult(v_char_g + "=" + v_string_StringConstructor + "[" + v_number_16 + "-" + v_number_2 + "],");
     }
-    else {
+    else
+    {
         // []["filter"]["constructor"]("return btoa")()
         const v_function_btoa = GetVariableName();
-        AddToResult(v_function_btoa + "=" + v_function_function + "(" +
+        AddToResult(
+            v_function_btoa + "=" + v_function_function + "(" +
             [v_char_r, v_char_e, v_char_t, v_char_u, v_char_r, v_char_n, v_char_space, v_char_b, v_char_t, v_char_o, v_char_a].join("+")
-            + ")(),");
+            + ")(),"
+        );
+
         // S = btoa("a ")[1]
         AddToResult(v_char_S + "=" + v_function_btoa + "(" + v_char_a + "+" + v_char_space + ")[" + v_number_1 + "],");
+
         // g = btoa("b")[1]
         AddToResult(v_char_g + "=" + v_function_btoa + "(" + v_char_b + ")[" + v_number_1 + "],");
     }
+
     // "toString"
     const v_string_toString = GetVariableName();
     AddToResult(v_string_toString + "=" + [v_char_t, v_char_o, v_char_S, v_char_t, v_char_r, v_char_i, v_char_n, v_char_g].join("+") + ",");
+
     // p = (16+8+1)["toString"](32)
     const v_char_p = GetVariableName();
     AddToResult(v_char_p + "=(" + v_number_1 + "+" + v_number_8 + "+" + v_number_16 + ")[" + v_string_toString + "](" + v_number_32 + "),");
+
     // []["constructor"]["constructor"]("return escape")()
     const v_function_escape = GetVariableName();
-    AddToResult(v_function_escape + "=[][" + v_string_constructor + "][" + v_string_constructor + "](" +
+    AddToResult(
+        v_function_escape + "=[][" + v_string_constructor + "][" + v_string_constructor + "](" +
         [v_char_r, v_char_e, v_char_t, v_char_u, v_char_r, v_char_n, v_char_space, v_char_e, v_char_s, v_char_c, v_char_a, v_char_p, v_char_e].join("+")
-        + ")(),");
+        + ")(),"
+    );
+
     // C = escape(''["big"]())[2]
     const v_char_C = GetVariableName();
     AddToResult(v_char_C + "=" + v_function_escape + "(''[" + [v_char_b, v_char_i, v_char_g].join("+") + "]())[" + v_number_2 + "],");
+
     // m = (16+4+2)["toString"](32)
     const v_char_m = GetVariableName();
     AddToResult(v_char_m + "=(" + v_number_16 + "+" + v_number_4 + "+" + v_number_2 + ")[" + v_string_toString + "](" + v_number_32 + "),");
+
     // h = (16+1)["toString"](32)
     const v_char_h = GetVariableName();
     AddToResult(v_char_h + "=(" + v_number_16 + "+" + v_number_1 + ")[" + v_string_toString + "](" + v_number_32 + "),");
+
     // h = (32-1)["toString"](32)
     const v_char_v = GetVariableName();
     AddToResult(v_char_v + "=(" + v_number_32 + "-" + v_number_1 + ")[" + v_string_toString + "](" + v_number_32 + "),");
+
     // ''["constructor"]["fromCharCode"]
     const v_function_stringFromCharCode = GetVariableName();
-    AddToResult(v_function_stringFromCharCode + "=''[" + v_string_constructor + "][" +
+    AddToResult(
+        v_function_stringFromCharCode + "=''[" + v_string_constructor + "][" +
         [v_char_f, v_char_r, v_char_o, v_char_m, v_char_C, v_char_h, v_char_a, v_char_r, v_char_C, v_char_o, v_char_d, v_char_e].join("+")
-        + "],");
+        + "],"
+    );
+
     // []["filter"]["constructor"]("return eval")()
     const v_function_eval = GetVariableName();
-    AddToResult(v_function_eval + "=" + v_function_function + "(" +
+    AddToResult(
+        v_function_eval + "=" + v_function_function + "(" +
         [v_char_r, v_char_e, v_char_t, v_char_u, v_char_r, v_char_n, v_char_space, v_char_e, v_char_v, v_char_a, v_char_l].join("+")
-        + ")(),");
+        + ")(),"
+    );
+
     let v_bool_deobfuscationOk = "";
-    if (deobfuscationProtection) {
+    if (deobfuscationProtection)
+    {
         const dummyString = GetRandomStr(allowLongerName);
         const v_string_dummyString = GetVariableName();
         AddToResult(v_string_dummyString + "='" + dummyString + "',");
+
         const v_function_deobfuscationProtection = GetVariableName();
         const functionStart = target === "es5-" ? "function()" : "()=>";
         AddToResult(v_function_deobfuscationProtection + "=" + functionStart + "{'" + dummyString + "'},");
+
         // How this works:
         // In javascript, you can convert functions to a string, and if you convert a user-defined function to string,
         // you'll get back the exact string representation of the function
         // Deobfuscators usually format the code to make it more readable, so we create a dummy function which will be formatted for sure
         // So we store the original string representation, and compare it with the new one
         // If the code was formatted, then those two won't match, and we can do stuff with that
+
         v_bool_deobfuscationOk = GetVariableName();
-        AddToResult(v_bool_deobfuscationOk + "=(" + v_function_deobfuscationProtection + "+[])["
+        AddToResult(
+            v_bool_deobfuscationOk + "=(" + v_function_deobfuscationProtection + "+[])["
             + [v_char_s, v_char_u, v_char_b, v_char_s, v_char_t, v_char_r].join("+")
-            + "](" + GetNumber(functionStart.length + 2) + "," + GetNumber(dummyString.length) + ")==" + v_string_dummyString + ",");
-        if (deobfuscationProtection.type !== "skip") {
+            + "](" + GetNumber(functionStart.length + 2) + "," + GetNumber(dummyString.length) + ")==" + v_string_dummyString + ","
+        );
+
+        if (deobfuscationProtection.type !== "skip")
+        {
             const v_string_otherFunctionName = GetVariableName();
             const v_string_param1_deobfuscationProtection = GetVariableName();
+
             AddToResult(v_string_otherFunctionName + "=" + v_function_function + "('" + v_string_param1_deobfuscationProtection + "',");
-            function GetCharCodesOf(str) {
+
+            function GetCharCodesOf(str: string)
+            {
                 const charCodes = GetCharCodes(str);
                 return v_function_stringFromCharCode + "(" + charCodes.map(charCode => GetNumber(charCode))
                     .join(",") + ")";
             }
-            switch (deobfuscationProtection.type) {
+
+            switch (deobfuscationProtection.type)
+            {
                 case "error":
                     {
                         AddToResult(GetCharCodesOf("!function \u0192(){" + v_string_param1_deobfuscationProtection + "=='" + dummyString + "'||\u0192()}()"));
@@ -754,49 +1102,68 @@ export function Obfuscate(inputCode, options) {
                     }
                 case "custom":
                     {
-                        AddToResult(GetCharCodesOf(v_string_param1_deobfuscationProtection + "=='" + dummyString
-                            + "'||!function(){" + deobfuscationProtection.codeToRun + "}()"));
+                        AddToResult(GetCharCodesOf(
+                            v_string_param1_deobfuscationProtection + "=='" + dummyString
+                            + "'||!function(){" + deobfuscationProtection.codeToRun + "}()"
+                        ));
                         break;
                     }
                 default:
                     Unreachable(deobfuscationProtection);
             }
-            AddToResult(")((" + v_function_deobfuscationProtection + "+[])["
+
+            AddToResult(
+                ")((" + v_function_deobfuscationProtection + "+[])["
                 + [v_char_s, v_char_u, v_char_b, v_char_s, v_char_t, v_char_r].join("+")
-                + "](" + GetNumber(functionStart.length + 2) + "," + GetNumber(dummyString.length) + ")),");
+                + "](" + GetNumber(functionStart.length + 2) + "," + GetNumber(dummyString.length) + ")),"
+            );
         }
     }
-    const finalLetters = [];
-    for (const [_, letterData] of letters) {
+
+    const finalLetters: string[] = [];
+    for (const [_, letterData] of letters)
+    {
         finalLetters.push(letterData.assignmentExpr);
     }
+
     Shuffle(finalLetters);
+
     AddToResult(finalLetters.join(",") + ";");
-    if (deobfuscationProtection) {
+
+    if (deobfuscationProtection)
+    {
         AddToResult(v_bool_deobfuscationOk + "&&");
     }
+
     AddToResult(v_function_eval + "(");
+
     // Assemble the characters from the input code, using String.fromCharCode
     // The maximum number of function arguments is limited (e.g. 65535 on chrome), so for long texts, we need to split up the process
     // `batchCount` indicates how many arguments we use for a function call
     // 4096 should be fine on all browsers
     // Also add random count at a time
     const batchCount = 4096;
-    const batchData = [];
+    const batchData: string[] = [];
     let textIndex = 0;
-    while (textIndex < inputCharCodes.length) {
+    while (textIndex < inputCharCodes.length)
+    {
         const finalTextAssembled = [];
         const batchEndIndex = Math.min(textIndex + Math.floor(batchCount * (Random() * 0.5 + 0.5)), inputCharCodes.length);
-        while (textIndex < batchEndIndex) {
-            const letterData = letters.get(inputCharCodes[textIndex]);
+
+        while (textIndex < batchEndIndex)
+        {
+            const letterData = letters.get(inputCharCodes[textIndex])!;
             finalTextAssembled.push(letterData.variableName);
             ++textIndex;
         }
+
         const currentBatchText = v_function_stringFromCharCode + "(" + finalTextAssembled.join(",") + ")";
         batchData.push(currentBatchText);
     }
+
     AddToResult(batchData.join("+"));
     AddToResult(")");
     AddToResult("})()");
+
     return resultSegments.join("");
 }
