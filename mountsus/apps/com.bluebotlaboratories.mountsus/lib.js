@@ -79,6 +79,7 @@ function dirtyMntUs() {
 }
 
 function jailbreak() {
+    log("Loading - please wait...")
     dirtyMntUs();
     document.getElementById("verifyButton").style.display = "block";
     // Read file contents
@@ -123,6 +124,7 @@ function testExploit(message, errorMessage) {
 }
 
 function verifyExploit() {
+    log("Checking... please stand by...");
     document.getElementById("verifyButton").style.display = "none";
-    setInterval(function tmp() {testExploit("Exploit verified! Please REBOOT!", "ERROR - Exploit could not be verified!");}, 500);
+    setInterval(function tmp() {testExploit("Exploit verified! Please REBOOT!", "ERROR - Exploit could not be verified!");}, 1000);
 }
