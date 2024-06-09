@@ -9,12 +9,11 @@ if (fs.existsSync(__dirname + "/../mountsus-obs/")) {
 fs.cpSync(__dirname + "/../../../mountsus/", __dirname + "/../../../mountsus-obs/", {recursive: true})
 
 const files = [
-    __dirname + "/../../../mountsus-obs/apps/com.bluebotlaboratories.mountsus/main.js",
-    __dirname + "/../../../mountsus-obs/apps/com.bluebotlaboratories.mountsus/lib.js",
-    __dirname + "/../../../mountsus-obs/apps/com.bluebotlaboratories.mountsus/js/mountsus_dialog.js",
-    __dirname + "/../../../mountsus-obs/apps/com.bluebotlaboratories.mountsus/js/mountsus_dialog2.js",
-    __dirname + "/../../../mountsus-obs/apps/com.bluebotlaboratories.mountsus/js/constants.js",
-    __dirname + "/../../../mountsus-obs/apps/com.bluebotlaboratories.mountsus/js/widget_list.js"
+    __dirname + "/../../../mountsus-obs/apps/com.bluebotlabs.mountsus/main.js",
+    __dirname + "/../../../mountsus-obs/apps/com.bluebotlabs.mountsus/lib.js",
+    __dirname + "/../../../mountsus-obs/apps/com.bluebotlabs.mountsus/js/mountsus_dialog.js",
+    __dirname + "/../../../mountsus-obs/apps/com.bluebotlabs.mountsus/js/constants.js",
+    __dirname + "/../../../mountsus-obs/apps/com.bluebotlabs.mountsus/js/widget_list.js"
 ]
 
 var nameCache = {};

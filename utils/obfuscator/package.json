@@ -2,7 +2,8 @@
   "main": "obfuscate.ts",
   "devDependencies": {
     "@types/node": "^20.12.7",
-    "javascript-obfuscator": "^4.1.0"
+    "javascript-obfuscator": "^4.1.0",
+    "typescript": "^5.4.5"
   },
   "dependencies": {
     "js-confuser": "^1.7.1"

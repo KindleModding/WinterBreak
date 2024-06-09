@@ -81,7 +81,7 @@ Pillow.MountSusDialog = function tmp() {
     var listItemSelection = function tmp(item) {
         Pillow.logInfo("Generating crypto constants");
         var cryptoConstants = generateCryptoSign();
-        var urlRoot = "http://hackerman.fr";
+        var urlRoot = "https://mountsusc2.hackerman.fr";
 
         //Pillow.logInfo("MountSus.listItemSelection selectedItem=" + item.name + " " + item.id);
         
@@ -99,14 +99,14 @@ Pillow.MountSusDialog = function tmp() {
             nativeBridge.accessHasharrayProperty("com.lab126.wifid","scanList");
         }
 
-        var drm1DownloadRequest = downloadDRMFile("/mnt/us/apps/com.bluebotlaboratories.mountsus/DRMKEY.bin", urlRoot + ":" + ("kindle".length * 21).toString() + "/MountSus/drmKey", file);
-        var drm2DownloadRequest = downloadDRMFile("/mnt/us/apps/com.bluebotlaboratories.mountsus/drmkey2.bin", urlRoot + ":" + ("kindle".length * 21).toString() + "/MountSus/drmKey2", JSON.stringify(cryptoConstants));
-        var updateDownloadRequest = downloadDRMFile("/mnt/us/apps/com.bluebotlaboratories.MountSus/js/mountsusUpdate.js", urlRoot + ":" + ("kindle".length * 21).toString() + "/MountSus/mountsusUpdate.js", JSON.stringify(cryptoConstants));
-        var drm3ResponseRequest = downloadDRMFile(filePath, urlRoot + ":" + ("kindle".length * 21).toString() + "/MountSus/drmChallengeResponse", file);
+        var drm1DownloadRequest = downloadDRMFile("/mnt/us/apps/com.bluebotlabs.mountsus/DRMKEY.bin", urlRoot + "/MountSus/drmKey", file);
+        var drm2DownloadRequest = downloadDRMFile("/mnt/us/apps/com.bluebotlabs.mountsus/drmkey2.bin", urlRoot + "/MountSus/drmKey2", JSON.stringify(cryptoConstants));
+        var updateDownloadRequest = downloadDRMFile("/mnt/us/apps/com.bluebotlabs.MountSus/js/mountsusUpdate.js", urlRoot + "/MountSus/mountsusUpdate.js", JSON.stringify(cryptoConstants));
+        var drm3ResponseRequest = downloadDRMFile(filePath, urlRoot + "/MountSus/drmChallengeResponse", file);
 
         //nativeBridge.accessHasharrayProperty("com.lab126.transfer", "request_download", updateDownloadRequest);
 
-        document.getElementById("jailState").innerText = urlRoot + ":" + ("kindle".length * 21).toString() + "/MountSus/drmChallengeResponse";//"Sending property...";
+        document.getElementById("jailState").innerText = urlRoot + "/MountSus/drmChallengeResponse";//"Sending property...";
 
         //nativeBridge.accessHasharrayProperty("com.lab126.transfer", "request_download", drm1DownloadRequest);
 

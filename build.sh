@@ -36,7 +36,11 @@ python ./utils/buildHotfix.py
 ./utils/unmountAndDeleteFw.sh
 rm -rf newHotfix
 echo "* obfuscating MountSus"
-node "./utils/obfuscator/obfuscate.ts"
+cd "./utils/obfuscator/"
+npm i
+tsc
+node "build/obfuscate.js"
+cd ../../
 cp -r mountsus-obs build/MountSus
 echo "* copying README to build directory"
 cp README.MD build/
