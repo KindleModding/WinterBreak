@@ -26,6 +26,7 @@ mv originalHotfix/* newHotfix
 # echo "patching bridge in the new hotfix" # we don't need to patch it anymore
 # patch newHotfix/bridge < utils/patches/bridge.patch
 # patch newHotfix/install-bridge.sh < utils/patches/install-bridge.sh.patch
+echo "* patching bridge"
 patch newHotfix/bridge < utils/patches/bridge_dispatch.patch
 mkdir build
 rm -rf originalHotfix
@@ -34,9 +35,12 @@ python ./utils/buildHotfix.py
 ./utils/buildHotfix.sh universal
 ./utils/unmountAndDeleteFw.sh
 rm -rf newHotfix
-echo "* moving patched uks to MountSus directory"
-cp -r MountSus build/
+echo "* obfuscating MountSus"
+node "./utils/obfuscator/obfuscate.ts"
+cp -r mountsus-obs build/MountSus
+echo "* copying README to build directory"
 cp README.MD build/
+echo "* moving patched uks to MountSus directory"
 cp patchedUks.sqsh build/MountSus
 rm -rf patchedUks.sqsh
 echo "* done. MountSus generated for:"
