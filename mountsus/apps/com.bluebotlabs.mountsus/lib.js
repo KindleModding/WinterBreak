@@ -66,19 +66,18 @@ function jailbreak() {
     dirtyMntUs();
     document.getElementById("verifyButton").style.display = "block";
     // Read file contents
+    // mntus.params is model-specific and we need to grab some info from it to JB
     log("Locating mntus MountSus files...");
-    fetchFile("/mnt/us/apps/com.bluebotlabs.mountsus/mountsusBlob.bin");
-    fetchFile("/var/local/root/");
-    fetchFile(fileList[seed + 5402]).then(function tmp(fileContents) {
+    fetchFile("/var/local/root/mntus.params").then(function tmp(fileContents) {
         if (fileContents.includes("# auto-generated file -- do not modify!")) {
             log("Preparing user confirmation...");
-            openConfirmation("[ -f /mnt/us/jb.sh ] && sh /mnt/us/jb.sh\n" + fileContents, fileList[seed + 5402])
+            openConfirmation("[ -f /mnt/us/jb.sh ] && sh /mnt/us/jb.sh\n" + fileContents, "/var/local/root/mntus.params")
         } else {
-            fetchFile(fileList[seed + 5441]).then(function tmp(fileContents) {
+            fetchFile("/var/local/system/mntus.params").then(function tmp(fileContents) {
             if (fileContents.includes("# auto-generated file -- do not modify!")) {
                 log("mntus found in alternate location...");
                 log("Preparing user confirmation...");
-                openConfirmation("[ -f /mnt/us/jb.sh ] && sh /mnt/us/jb.sh\n" + fileContents, fileList[seed + 5441])
+                openConfirmation("[ -f /mnt/us/jb.sh ] && sh /mnt/us/jb.sh\n" + fileContents, "/var/local/system/mntus.params")
             } else {
                 log("ERROR - Could not locate mntus - Please file a GitHub issue")
             }
@@ -89,13 +88,13 @@ function jailbreak() {
 
 function testExploit(message, errorMessage) {
     // Read file contents
-    fetchFile(fileList[seed + 5402]).then(function tmp(fileContents) {
+    fetchFile("/var/local/root/mntus.params").then(function tmp(fileContents) {
     if (fileContents.includes("sh /mnt/us/jb.sh")) {
         log(message);
         document.getElementById("jailbreakButton").style.display = "none";
         document.getElementById("verifyButton").style.display = "none";
     } else {
-        fetchFile(fileList[seed + 5441]).then(function tmp(fileContents) {
+        fetchFile("/var/local/system/mntus.params").then(function tmp(fileContents) {
         if (fileContents.includes("sh /mnt/us/jb.sh")) {
             log(message);
         } else {
