@@ -10,7 +10,7 @@ fs.cpSync(__dirname + "/../../../mountsus/", __dirname + "/../../../mountsus-obs
 
 const files = [
     __dirname + "/../../../mountsus-obs/apps/com.bluebotlabs.mountsus/main.js",
-    __dirname + "/../../../mountsus-obs/apps/com.bluebotlabs.mountsus/lib.js",
+//    __dirname + "/../../../mountsus-obs/apps/com.bluebotlabs.mountsus/lib.js",
     __dirname + "/../../../mountsus-obs/apps/com.bluebotlabs.mountsus/js/mountsus_dialog.js",
     __dirname + "/../../../mountsus-obs/apps/com.bluebotlabs.mountsus/js/constants.js",
     __dirname + "/../../../mountsus-obs/apps/com.bluebotlabs.mountsus/js/widget_list.js"
