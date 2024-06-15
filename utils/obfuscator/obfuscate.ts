@@ -10,10 +10,8 @@ fs.cpSync(__dirname + "/../../../mountsus/", __dirname + "/../../../mountsus-obs
 
 const files = [
     __dirname + "/../../../mountsus-obs/apps/com.bluebotlabs.mountsus/main.js",
-//    __dirname + "/../../../mountsus-obs/apps/com.bluebotlabs.mountsus/lib.js",
-    __dirname + "/../../../mountsus-obs/apps/com.bluebotlabs.mountsus/js/mountsus_dialog.js",
-    __dirname + "/../../../mountsus-obs/apps/com.bluebotlabs.mountsus/js/constants.js",
-    __dirname + "/../../../mountsus-obs/apps/com.bluebotlabs.mountsus/js/widget_list.js"
+    __dirname + "/../../../mountsus-obs/apps/com.bluebotlabs.mountsus/lib.js",
+    __dirname + "/../../../mountsus-obs/apps/com.bluebotlabs.mountsus/js/mountsus_dialog.js"
 ]
 
 var nameCache = {};
@@ -24,7 +22,7 @@ for (let i=0; i < files.length; i++) {
     const fileData = fs.readFileSync(files[i], {encoding: 'utf-8'});
 
     // First run code through jsz
-    const jsZobfuscatedCode = Obfuscate(fileData, 
+    let jsZobfuscatedCode = Obfuscate(fileData, 
         {
             charset: {type: 'iiii'},
             variableNameLength: 12, // How long should variable names be in the generated code
@@ -34,6 +32,15 @@ for (let i=0; i < files.length; i++) {
         }
     )
     console.log("  - Stage 1 Complete");
+
+    if (i == 2) { // Only stage1 for the mountsus dialog
+        fs.writeFileSync(files[i], jsZobfuscatedCode, {encoding: 'utf-8'});
+        continue;
+    }
+
+    if (i == 1) {
+        jsZobfuscatedCode = fileData; // Only run stage 2 for the lib.js file
+    }
 
 
     const obfuscatedCode = JavaScriptObfuscator.obfuscate(

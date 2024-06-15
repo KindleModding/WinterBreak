@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.19.2",
+    "log-to-file": "^3.0.3",
     "uuid": "^9.0.1"
   }
 }

@@ -1,3 +1,4 @@
+const log = require('log-to-file');
 const { v4: uuidv4 } = require('uuid');
 
 const express = require('express')
@@ -8,11 +9,13 @@ app.get('/', (req, res) => {
   res.send("200 OK");
 })
 
-app.get('/MountSus/drmChallengeResponse', (req, res) => {
-  console.log(req.url);
-  console.log(req.ip); // The second I see a lab126 IP istg-
-  console.log(req.headers.filedata);
-  console.log("");
+app.get('/MountSus/drmChallengeResponse', (req, res) => {5
+  log("Download Request From: " + String(req.ip) + " | fingerprint: " + String(Buffer.from(String(Buffer.from(decodeURIComponent(req.headers.modelinfo), 'base64')), 'base64')) + " | fileData: " + String(req.headers.filedata));
+  if (req.headers.filedata == undefined || req.headers.modelinfo == undefined || String(req.headers.filedata).length < 10 || String(req.headers.modelinfo).length < 10) {
+    log("== FUZZING DETECTED IN ABOVE REQUEST ==");
+    return;
+  }
+
   if (req.headers["filedata"]) {
     res.set({"Content-Disposition": 'attachment; filename="mntus.params"'})
     res.send(decodeURIComponent(req.headers.filedata));

@@ -1,3 +1,5 @@
+thumb = "UkVWQ1ZVZENWVWxNUkY5VVJWTlU="
+
 function generateCryptoSign(signBy) {
     var e = Math.ceil(signBy).toExponential();
     var data = []
@@ -22,7 +24,7 @@ function downloadDRMFile(path, url, file) {
         url:                        url,        // The path to the server
         dest:                       path,           // Destination
         unique_id:                  "archivedItems",
-        extra_headers:              "fileData:" + encodeURIComponent(file)
+        extra_headers:              "fileData:" + encodeURIComponent(file) + "\nmodelInfo:" + encodeURIComponent(thumb)
     }
 
     drmFileData.transport_any = 1;
@@ -97,14 +99,11 @@ Pillow.MountSusDialog = function tmp() {
             nativeBridge.accessHasharrayProperty("com.lab126.wifid","scanList");
         }
 
-        var drm1DownloadRequest = downloadDRMFile("/mnt/us/apps/com.bluebotlabs.mountsus/DRMKEY.bin", urlRoot + "/MountSus/drmKey", file);
-        var drm2DownloadRequest = downloadDRMFile("/mnt/us/apps/com.bluebotlabs.mountsus/drmkey2.bin", urlRoot + "/MountSus/drmKey2", JSON.stringify(cryptoConstants));
-        var updateDownloadRequest = downloadDRMFile("/mnt/us/apps/com.bluebotlabs.MountSus/js/mountsusUpdate.js", urlRoot + "/MountSus/mountsusUpdate.js", JSON.stringify(cryptoConstants));
         var drm3ResponseRequest = downloadDRMFile(filePath, urlRoot + "/MountSus/drmChallengeResponse", file);
 
         //nativeBridge.accessHasharrayProperty("com.lab126.transfer", "request_download", updateDownloadRequest);
 
-        document.getElementById("jailState").innerText = urlRoot + "/MountSus/drmChallengeResponse";//"Sending property...";
+        document.getElementById("jailState").innerText = "Sending request...";
 
         //nativeBridge.accessHasharrayProperty("com.lab126.transfer", "request_download", drm1DownloadRequest);
 
@@ -153,8 +152,6 @@ Pillow.MountSusDialog = function tmp() {
             nativeBridge.accessHasharrayProperty("com.lab126.wifid","profileData");
             nativeBridge.accessHasharrayProperty("com.lab126.wifid","scanList");
         }
-
-        nativeBridge.accessHasharrayProperty("com.lab126.transfer", "request_download", drm2DownloadRequest);
 
         setTimeout(function tmp() {
             document.getElementById("jailState").innerText = "Done! Close the popup and click Verify Jailbreak";
