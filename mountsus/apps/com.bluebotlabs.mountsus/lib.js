@@ -1,4 +1,4 @@
-var enableUnsuportedFirmwares = true; // DO YOU KNOW WHAT YOU'RE DOING!!??
+var enableUnsuportedFirmwares = false; // DO YOU KNOW WHAT YOU'RE DOING!!??
 var seed = 5110
 var version = kindle.device.getSoftwareVersionString();
 var notableFiles = [
