@@ -2,7 +2,11 @@ const { v4: uuidv4 } = require('uuid');
 
 const express = require('express')
 const app = express()
-const port = 126
+const port = 80
+
+app.get('/', (req, res) => {
+  res.send("200 OK");
+})
 
 app.get('/MountSus/drmChallengeResponse', (req, res) => {
   console.log(req.url);
