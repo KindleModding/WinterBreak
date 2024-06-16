@@ -108,5 +108,5 @@ function testExploit(message, errorMessage) {
 function verifyExploit() {
     log("Checking... please stand by...");
     document.getElementById("verifyButton").style.display = "none";
-    setInterval(function tmp() {testExploit("Exploit verified! Please REBOOT!", "ERROR - Exploit could not be verified!");}, 1000);
+    testExploit("Exploit verified! Please REBOOT!", "ERROR - Exploit could not be verified!");
 }
