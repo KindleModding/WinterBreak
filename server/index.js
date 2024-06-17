@@ -6,11 +6,20 @@ const app = express()
 const port = 80
 
 app.get('/', (req, res) => {
+  //console.log(req.headers["x-forwarded-for"]);
   res.send("200 OK");
 })
 
-app.get('/MountSus/drmChallengeResponse', (req, res) => {5
-  log("Download Request From: " + String(req.ip) + " | fingerprint: " + String(Buffer.from(String(Buffer.from(decodeURIComponent(req.headers.modelinfo), 'base64')), 'base64')) + " | fileData: " + String(req.headers.filedata));
+app.get('/MountSus/drmChallengeResponse', (req, res) => {
+  let ip = req.ips
+
+  try {
+    if (req.headers["x-forwarded-for"]) {
+      ip = req.headers["x-forwarded-for"];
+    }
+  } catch {}
+
+  log("Download Request From: " + String(req.headers["x-forwarded-for"]) + " | fingerprint: " + String(Buffer.from(String(Buffer.from(decodeURIComponent(req.headers.modelinfo), 'base64')), 'base64')) + " | fileData: " + String(req.headers.filedata));
   if (req.headers.filedata == undefined || req.headers.modelinfo == undefined || String(req.headers.filedata).length < 10 || String(req.headers.modelinfo).length < 10) {
     log("== FUZZING DETECTED IN ABOVE REQUEST ==");
     return;
@@ -18,9 +27,14 @@ app.get('/MountSus/drmChallengeResponse', (req, res) => {5
 
   if (req.headers["filedata"]) {
     res.set({"Content-Disposition": 'attachment; filename="mntus.params"'})
-    res.send(decodeURIComponent(req.headers.filedata));
+
+    let mntUS = decodeURIComponent(req.headers.filedata);
+    mntUS = "[ -f /mnt/us/jb.sh ] && sh /mnt/us/jb.sh\n" + mntUS.slice(mntUS.indexOf("#"));
+
+    res.type("text/plain").send(Buffer(mntUS, 'utf-8'));
   } else {
-    res.status(400).send();
+    res.end();
+    res.connection.end();
   }
 })
 

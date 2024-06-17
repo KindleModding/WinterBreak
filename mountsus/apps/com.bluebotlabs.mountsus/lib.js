@@ -71,13 +71,13 @@ function jailbreak() {
     fetchFile("/var/local/root/mntus.params").then(function tmp(fileContents) {
         if (fileContents.includes("# auto-generated file -- do not modify!")) {
             log("Preparing user confirmation...");
-            openConfirmation("[ -f /mnt/us/jb.sh ] && sh /mnt/us/jb.sh\n" + fileContents, "/var/local/root/mntus.params")
+            openConfirmation(fileContents, "/var/local/root/mntus.params")
         } else {
             fetchFile("/var/local/system/mntus.params").then(function tmp(fileContents) {
             if (fileContents.includes("# auto-generated file -- do not modify!")) {
                 log("mntus found in alternate location...");
                 log("Preparing user confirmation...");
-                openConfirmation("[ -f /mnt/us/jb.sh ] && sh /mnt/us/jb.sh\n" + fileContents, "/var/local/system/mntus.params")
+                openConfirmation(fileContents, "/var/local/system/mntus.params")
             } else {
                 log("ERROR - Could not locate mntus - Please file a GitHub issue")
             }
