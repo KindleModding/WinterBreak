@@ -43,7 +43,7 @@ node "build/obfuscate.js"
 cd ../../
 cp -r mountsus-obs build/MountSus
 echo "* copying README to build directory"
-cp README.MD build/
+cp README.md build/
 echo "* moving patched uks to MountSus directory"
 cp patchedUks.sqsh build/MountSus
 rm -rf patchedUks.sqsh

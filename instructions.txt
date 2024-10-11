@@ -1,0 +1,10 @@
+1. install Mesquito
+2. copy everything in the `MountSus` folder to your Kindle root
+3. open mountsus app in mesquito
+4. wait 1-2 mins for it to initialise
+5. click JAILBREAK
+6. wait 1-2 mins for it to compute stuff
+7. click the jailbreak button on the popup
+8. once the popup tells you do, close it with the `X`
+9. scroll down and click `VERIFY JAILBREAK`
+10. reboot if it tells you to
