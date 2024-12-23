@@ -10,6 +10,8 @@ if [[ $EUID -ne 0 ]]; then
    exit 1
 fi
 
+chmod +x ./utils/kindletool # DONT ASK
+
 echo "* extracting and mounting fw"
 sh ./utils/extractAndMountFw.sh
 echo "* extracting uks.sqsh from official firmware"
