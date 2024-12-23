@@ -35,13 +35,15 @@ python ./utils/buildHotfix.py
 ./utils/buildHotfix.sh universal
 ./utils/unmountAndDeleteFw.sh
 rm -rf newHotfix
-echo "* obfuscating MountSus"
-cd "./utils/obfuscator/"
-npm i
-tsc
-node "build/obfuscate.js"
-cd ../../
-cp -r mountsus-obs build/MountSus
+#echo "* obfuscating MountSus"
+#cd "./utils/obfuscator/"
+#npm i
+#tsc
+#node "build/obfuscate.js"
+#cd ../../
+#cp -r mountsus-obs build/MountSus
+echo "* Copying mountsus"
+cp -r mountsus build/MountSus
 echo "* copying README to build directory"
 cp README.md build/
 echo "* moving patched uks to MountSus directory"

