@@ -21,7 +21,7 @@ xm_log() {
   echo "${1}" >> /mnt/us/xmas_jb.log
   eips 0 $POS "${1}"
   echo "${1}"
-  POS=$POS+1
+  POS=$((POS+1))
 }
 
 ###
@@ -33,7 +33,6 @@ fi
 if [ -d "/mnt/us/xmas_jb.log" ] ; then # Just in case!
   exit 0 # The jailbreak has already been run before
 fi
-xm_log "XMAS"
 
 
 ###
@@ -73,14 +72,16 @@ make_immutable() {
 ###
 xm_log "**** XMAS  JAILBREAK ****"
 xm_log "* Created by HackerDude *"
-xm_log "*************************"
+xm_log "**************** v1.0.0 *"
 xm_log ""
-xm_log "Like what you see? Donate to my Ko-Fi to help support these projects: https://ko-fi.com/hackerdude"
+xm_log "Like what you see? Donate to my Ko-Fi"
+xm_log "to help support these projects: https://ko-fi.com/hackerdude"
 xm_log ""
 xm_log "Thanks to Marek, Katadelos and NiLuJe for their help"
 xm_log "creating this jailbreak"
 xm_log ""
-xm_log "After all, all devices have their dangers. The discovery of speech introduced communication - and lies."
+xm_log "After all, all devices have their dangers."
+xm_log " The discovery of speech introduced communication - and lies."
 xm_log "- Isaac Asimov"
 xm_log ""
 xm_log ""
@@ -173,4 +174,6 @@ mntroot ro
 
 xm_log "Finished installing jailbreak!"
 
+xm_log "Waiting 3 seconds to reboot..."
+sleep 3
 reboot
