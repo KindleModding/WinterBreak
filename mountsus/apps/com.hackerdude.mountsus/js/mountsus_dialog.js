@@ -53,7 +53,7 @@ Pillow.MountSusDialog = function tmp() {
         });
 
         setTimeout(function tmp() {
-            document.getElementById("jailState").innerText = "Done! Close the popup and click Verify Jailbreak";
+            document.getElementById("jailState").innerText = "Done! Reboot your Kindle.";
         }, 1000);
     };
 
