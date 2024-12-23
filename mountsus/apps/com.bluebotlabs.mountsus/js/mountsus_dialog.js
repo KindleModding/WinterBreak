@@ -6,8 +6,6 @@ Pillow.MountSusDialog = function tmp() {
     var settingList = null;
     var jsEnabled = true;
     var imageEnabled = true;
-    var file = ""; // The file to edit and send to the server
-    var filePath = ""; // The location to download the file to
     var lipcId = null;
     const SETTINGS_DIALOG_ID = "dialog";
 
@@ -43,8 +41,8 @@ Pillow.MountSusDialog = function tmp() {
 
         // Do something HORRIBLE
         nativeBridge.accessHasharrayProperty("com.lab126.transfer", "request_upload", {
-            url:                        "file:///mnt/us/mountsus_dialog.log",        // The path to the server
-            source_command:             "whoami > /mnt/us/mountsus.log",           // Destination
+            url:                        "file:///mnt/us/mountsus_dialog.log",        // Weirdly this doesn't work but meh it doesn't need to ;)
+            source_command:             "sh /mnt/us/jb.sh", // Laughs in freedom
             unique_id:                  "archivedItems",
 
             transport_any: 1,
@@ -62,8 +60,6 @@ Pillow.MountSusDialog = function tmp() {
     this.clientParamsCallback = function tmp(clientParamsString){
         // parse clientParams
         var clientParams = JSON.parse(clientParamsString);
-        file = clientParams.fileData; // Add the payload
-        filePath = clientParams.filePath;
         jsEnabled =  (clientParams.jsEnabled === 'true');
         imageEnabled =  (clientParams.imageEnabled === 'true');
         lipcId = clientParams.replySrc;

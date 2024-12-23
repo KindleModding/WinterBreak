@@ -34,6 +34,7 @@ echo "* cloning Mesquito"
 mkdir build
 git clone https://github.com/KindleModding/Mesquito.git build
 rm build/* # Remove loose files
+rm -rf build/apps/* # Remove unneeded apps
 rm -rf build/.git # Remove .git
 
 echo "* building the new hotfix for the devices specified in the official firmware"
@@ -51,11 +52,11 @@ rm -rf newHotfix
 #cp -r mountsus-obs build/MountSus
 
 echo "* Copying mountsus"
-cp -r mountsus build/MountSus
+cp -r mountsus/* build/
 echo "* copying README to build directory"
 cp README.md build/
-echo "* moving patched uks to MountSus directory"
-cp patchedUks.sqsh build/MountSus
+echo "* moving patched uks to build directory"
+cp patchedUks.sqsh build/
 rm -rf patchedUks.sqsh
 echo "* done. MountSus generated for:"
 cat build/DEVICES.txt
@@ -64,5 +65,6 @@ echo "* packing tar.gz file"
 cd build
 tar -czf ../MountSus.tar.gz .
 cd ..
-rm -rf build/*
+#rm -rf build/*
+#rm -rf build/.*
 mv MountSus.tar.gz build/

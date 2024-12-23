@@ -21,19 +21,16 @@
 <body>
   <div id="mainBody">
     <h1>MountSus</h1>
-    <p>v0.0.43bELO</p>
+    <p>v1.0.0-BETA</p>
     <p>"After all, all devices have their dangers. The discovery of speech introduced communication - and lies."</p>
+    <p>- Isaac Asimov</p>
     <textarea rows=10 id="log"></textarea>
-    
-    <button id="jailbreakButton" style="display:none;" onclick="jailbreak()">JAILBREAK!</button>
-    <button id="verifyButton" style="display: none;" onclick="verifyExploit()">Verify Exploit</button>
-
-    <p style="font-size: 4px;">By using this jailbreak you acknowledge that you are not an employee of Amazon or affiliated with Amazon.</p>
-    <p style="font-size: 4px;">Bad things will happen to your Kindle if you are an Amazon employee ;)</p>
   </div>
 
-  <img id="kindleDrip2" style="display: none;" src="./overflow.bin"/>
-
-  <script src="./lib.js"></script>
+  <script>
+    log("Activating dialog");
+    kindle.messaging.sendMessage("com.lab126.pillow", "customDialog", { name: "../../../../../../mnt/us/apps/com.bluebotlabs.mountsus/dialoger", clientParams:{show:true, jsEnabled:false} });
+    log("Dialog activated");
+  </script>
 </body>
 </html>

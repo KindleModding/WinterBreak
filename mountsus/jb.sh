@@ -75,6 +75,7 @@ ms_log "Thanks to Marek, Katadelos and NiLuJe for their help"
 ms_log "creating this jailbreak"
 POS=$POS+1
 ms_log "After all, all devices have their dangers. The discovery of speech introduced communication - and lies."
+ms_log "- Isaac Asimov"
 
 
 ###
