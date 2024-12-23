@@ -28,13 +28,20 @@ mv originalHotfix/* newHotfix
 # patch newHotfix/install-bridge.sh < utils/patches/install-bridge.sh.patch
 echo "* patching bridge"
 patch newHotfix/bridge < utils/patches/bridge_dispatch.patch
-mkdir build
 rm -rf originalHotfix
+
+echo "* cloning Mesquito"
+mkdir build
+git clone https://github.com/KindleModding/Mesquito.git build
+rm build/* # Remove loose files
+rm -rf build/.git # Remove .git
+
 echo "* building the new hotfix for the devices specified in the official firmware"
 python ./utils/buildHotfix.py
 ./utils/buildHotfix.sh universal
 ./utils/unmountAndDeleteFw.sh
 rm -rf newHotfix
+
 #echo "* obfuscating MountSus"
 #cd "./utils/obfuscator/"
 #npm i
@@ -42,6 +49,7 @@ rm -rf newHotfix
 #node "build/obfuscate.js"
 #cd ../../
 #cp -r mountsus-obs build/MountSus
+
 echo "* Copying mountsus"
 cp -r mountsus build/MountSus
 echo "* copying README to build directory"
@@ -51,6 +59,8 @@ cp patchedUks.sqsh build/MountSus
 rm -rf patchedUks.sqsh
 echo "* done. MountSus generated for:"
 cat build/DEVICES.txt
+
+echo "* packing tar.gz file"
 cd build
 tar -czf ../MountSus.tar.gz .
 cd ..
