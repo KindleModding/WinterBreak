@@ -1,9 +1,8 @@
-1. Copy everything in the `XMAS` tar.gz file to your Kindle root
-2. Open xmas app in mesquito
-3. Wait 1-2 mins for it to initialise
-4. Click JAILBREAK
-5. Wait 1-2 mins for it to compute stuff
-6. Click the jailbreak button on the popup
-7. Once the popup tells you do, close it with the `X`
-8. Scroll down and click `VERIFY JAILBREAK`
-9. Reboot if it tells you to
+1. Download the latest release
+2. Turn on airplane mode
+3. Extract the contents of XMAS_JB to the root of your Kindle's storage
+4. Reboot your Kindle
+5. Open the Kindle store
+6. When prompted, enable WiFi
+7. Click on the XMAS icon
+8. Wait (Your Kindle will automatically reboot)
