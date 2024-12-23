@@ -1,4 +1,4 @@
 *.bin
 build/
 node_modules/
-mountsus-obs/
+xmas-obs/

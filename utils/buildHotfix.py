@@ -9,11 +9,11 @@ shutil.copy('./utils/bin-armhf/fbink', './newHotfix/fbink')
 
 # Replace branding lol
 
-branding = '"**** MOUNTSUS JB ****"' # Yes the "" is required
+#branding = '"**** MS JB ****"' # Yes the "" is required
 
-replacements = {
-    '"**** SQUASH JB ****"': branding
-}
+#replacements = {
+#    '"**** SQUASH JB ****"': branding
+#}
 with open('./newHotfix/bridge', 'r+') as file:
     fileData = file.read()
     file.seek(0)

@@ -21,4 +21,4 @@ for dev in ${DEVICE_LIST} ; do
 done
 
 cd newHotfix
-${KINDLETOOL} create ota2 ${DEVICES} -b FC04 -s min -t max -O -C . "../build/Update_hotfix_MountSus.bin"
+${KINDLETOOL} create ota2 ${DEVICES} -b FC04 -s min -t max -O -C . "../build/Update_hotfix_XMAS.bin"

@@ -1,5 +1,5 @@
-1. Copy everything in the `MountSus` tar.gz file to your Kindle root
-2. Open mountsus app in mesquito
+1. Copy everything in the `XMAS` tar.gz file to your Kindle root
+2. Open xmas app in mesquito
 3. Wait 1-2 mins for it to initialise
 4. Click JAILBREAK
 5. Wait 1-2 mins for it to compute stuff

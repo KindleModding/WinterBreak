@@ -42,29 +42,20 @@ python ./utils/buildHotfix.py
 ./utils/buildHotfix.sh universal
 ./utils/unmountAndDeleteFw.sh
 rm -rf newHotfix
-
-#echo "* obfuscating MountSus"
-#cd "./utils/obfuscator/"
-#npm i
-#tsc
-#node "build/obfuscate.js"
-#cd ../../
-#cp -r mountsus-obs build/MountSus
-
-echo "* Copying mountsus"
-cp -r mountsus/* build/
+echo "* Copying xmas"
+cp -r xmasjb/* build/
 echo "* copying README to build directory"
 cp README.md build/
 echo "* moving patched uks to build directory"
 cp patchedUks.sqsh build/
 rm -rf patchedUks.sqsh
-echo "* done. MountSus generated for:"
+echo "* done. XMAS generated for:"
 cat build/DEVICES.txt
 
 echo "* packing tar.gz file"
 cd build
-tar -czf ../MountSus.tar.gz .
+tar -czf ../XMAS_JB.tar.gz .
 cd ..
 #rm -rf build/*
 #rm -rf build/.*
-mv MountSus.tar.gz build/
+mv XMAS_JB.tar.gz build/

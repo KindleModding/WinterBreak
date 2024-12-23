@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# MountSus Jailbreak Script
+# XMAS Jailbreak Script
 # Based on the bridge script from the 1.16.N hotfix package
 # Special thanks to Marek, Katadelos and NiLuJe
 #
@@ -10,30 +10,30 @@
 
 
 
-set +e # If boot is halted stuff seriously goes wrong
+set +e # If boot is halted stuff seriously goes wrong (actually we don't need this anymore but I'm keeping it)
 
 
 ###
 # Define logging function
 ###
 POS=1
-ms_log() {
-  echo "${1}" >> /mnt/us/mountsus.log
+xm_log() {
+  echo "${1}" >> /mnt/us/xmas_jb.log
+  eips 0 $POS "${1}"
   echo "${1}"
-  #eips 0 $POS "${1}"
   POS=$POS+1
 }
 
 ###
-# Prevents potential bootloop (MountSus auto-reboots on completion)
+# Prevents potential bootloop (XMAS auto-reboots on completion)
 ###
-if [ -f "/mnt/us/mountsus.log" ] ; then
+if [ -f "/mnt/us/xmas_jb.log" ] ; then
   exit 0 # The jailbreak has already been run before
 fi
-if [ -d "/mnt/us/mountsus.log" ] ; then # Just in case!
+if [ -d "/mnt/us/xmas_jb.log" ] ; then # Just in case!
   exit 0 # The jailbreak has already been run before
 fi
-ms_log "MOUNTSUS PRELOAD"
+xm_log "XMAS"
 
 
 ###
@@ -71,14 +71,19 @@ make_immutable() {
 ###
 # Actual JB from here
 ###
-ms_log "MOUNTSUS JAILBREAK"
-ms_log "Created by HackerDude"
-POS=$POS+1
-ms_log "Thanks to Marek, Katadelos and NiLuJe for their help"
-ms_log "creating this jailbreak"
-POS=$POS+1
-ms_log "After all, all devices have their dangers. The discovery of speech introduced communication - and lies."
-ms_log "- Isaac Asimov"
+xm_log "**** XMAS  JAILBREAK ****"
+xm_log "* Created by HackerDude *"
+xm_log "*************************"
+xm_log ""
+xm_log "Like what you see? Donate to my Ko-Fi to help support these projects: https://ko-fi.com/hackerdude"
+xm_log ""
+xm_log "Thanks to Marek, Katadelos and NiLuJe for their help"
+xm_log "creating this jailbreak"
+xm_log ""
+xm_log "After all, all devices have their dangers. The discovery of speech introduced communication - and lies."
+xm_log "- Isaac Asimov"
+xm_log ""
+xm_log ""
 
 
 ###
@@ -87,7 +92,7 @@ ms_log "- Isaac Asimov"
 install_touch_update_key()
 {
         mount_rw
-        ms_log "install_touch_update_key - Copying the jailbreak updater key"
+        xm_log "install_touch_update_key - Copying the jailbreak updater key"
         make_mutable "/etc/uks/pubdevkey01.pem"
         rm -rf "/etc/uks/pubdevkey01.pem"
         cat > "/etc/uks/pubdevkey01.pem" << EOF
@@ -107,7 +112,7 @@ EOF
 install_touch_update_key_squash()
 {
     mount_rw
-    ms_log "install_touch_update_key_squash - Copying the jailbreak updater keystore"
+    xm_log "install_touch_update_key_squash - Copying the jailbreak updater keystore"
     make_mutable "/etc/uks.sqsh"
     local my_loop="$(grep ' /etc/uks ' /proc/mounts | cut -f1 -d' ')"
     umount "${my_loop}"
@@ -126,9 +131,9 @@ if [ ! -f "/etc/uks.sqsh" ] && [ ! -f "/etc/uks/pubdevkey01.pem" ] ; then
 
   # Verify key installation
   if [ -f "/etc/uks/pubdevkey01.pem" ] ; then
-  ms_log "Developer keys installed successfully! (pubdevkey01.pem)"
+  xm_log "Developer keys installed successfully! (pubdevkey01.pem)"
   else
-    ms_log "ERR - Could not install pubdevkey01.pem"
+    xm_log "ERR - Could not install pubdevkey01.pem"
   fi
 fi
 
@@ -138,14 +143,14 @@ if [ -f "/etc/uks.sqsh" ] && [ -f "/mnt/us/patchedUks.sqsh" ] ; then
 
   # Verify key installation
   if [ "$(md5sum "${ROOT}/etc/uks.sqsh" | awk '{ print $1; }')" ==  "$(md5sum "${ROOT}/mnt/us/patchedUks.sqsh" | awk '{ print $1; }')" ] ; then
-    ms_log "Developer keys installed successfully! (uks.sqsh)"
-    ms_log "$(ls /etc/uks)"
+    xm_log "Developer keys installed successfully! (uks.sqsh)"
+    xm_log "$(ls /etc/uks)"
   else
-    ms_log "ERR - Could not install uks.sqsh"
-    ms_log "$(whoami)"
-    ms_log "$(md5sum "/mnt/us/patchedUks.sqsh" | awk '{ print $1; }')"
-    ms_log "$(md5sum "/etc/uks.sqsh" | awk '{ print $1; }')"
-    ms_log "$(md5sum "${ROOT}/etc/uks.sqsh" | awk '{ print $1; }')"
+    xm_log "ERR - Could not install uks.sqsh"
+    xm_log "$(whoami)"
+    xm_log "$(md5sum "/mnt/us/patchedUks.sqsh" | awk '{ print $1; }')"
+    xm_log "$(md5sum "/etc/uks.sqsh" | awk '{ print $1; }')"
+    xm_log "$(md5sum "${ROOT}/etc/uks.sqsh" | awk '{ print $1; }')"
   fi
 fi
 
@@ -157,15 +162,15 @@ make_mutable "/PRE_GM_DEBUGGING_FEATURES_ENABLED__REMOVE_AT_GMC"
 rm -rf "/PRE_GM_DEBUGGING_FEATURES_ENABLED__REMOVE_AT_GMC"
 touch "/PRE_GM_DEBUGGING_FEATURES_ENABLED__REMOVE_AT_GMC"
 make_immutable "/PRE_GM_DEBUGGING_FEATURES_ENABLED__REMOVE_AT_GMC"
-ms_log "Enabled developer flag"
+xm_log "Enabled developer flag"
 
 touch "/MNTUS_EXEC"
 make_immutable "/MNTUS_EXEC"
-ms_log "Enabled mntus exec flag"
+xm_log "Enabled mntus exec flag"
 
 # Bye
 mntroot ro
 
-ms_log "Finished installing jailbreak!"
+xm_log "Finished installing jailbreak!"
 
 reboot
