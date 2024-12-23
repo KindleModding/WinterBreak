@@ -2,9 +2,8 @@ name: CI
 
 on:
   push:
-    branches: [ $default-branch ]
   pull_request:
-    branches: [ $default-branch ]
+  workflow_dispatch:
 
 jobs:
   build:
@@ -14,7 +13,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: build
-      run: ./build.sh
+      run: sh ./build.sh
     - uses: actions/upload-artifact@v4
       with:
         name: XMAS_JB

@@ -11,13 +11,13 @@ if [[ $EUID -ne 0 ]]; then
 fi
 
 echo "* extracting and mounting fw"
-./utils/extractAndMountFw.sh
+sh ./utils/extractAndMountFw.sh
 echo "* extracting uks.sqsh from official firmware"
-./utils/extractUksFromFirmware.sh
+sh ./utils/extractUksFromFirmware.sh
 echo "* patching uks.sqsh with the sexy pubdevkey01.pem"
-./utils/patchUksSqsh.sh
+sh ./utils/patchUksSqsh.sh
 echo "* extracting hotfix"
-./utils/extractHotfix.sh
+sh ./utils/extractHotfix.sh
 rm -rf newHotfix
 mkdir newHotfix
 mv originalHotfix/* newHotfix
@@ -39,8 +39,8 @@ rm -rf build/.git # Remove .git
 
 echo "* building the new hotfix for the devices specified in the official firmware"
 python ./utils/buildHotfix.py
-./utils/buildHotfix.sh universal
-./utils/unmountAndDeleteFw.sh
+sh ./utils/buildHotfix.sh universal
+sh ./utils/unmountAndDeleteFw.sh
 rm -rf newHotfix
 echo "* Copying xmas"
 cp -r xmasjb/* build/
