@@ -28,9 +28,11 @@ xm_log() {
 # Prevents potential bootloop (XMAS auto-reboots on completion)
 ###
 if [ -f "/mnt/us/xmas_jb.log" ] ; then
+  xm_log "Already ran - exiting"
   exit 0 # The jailbreak has already been run before
 fi
 if [ -d "/mnt/us/xmas_jb.log" ] ; then # Just in case!
+  xm_log "Already ran - exiting"
   exit 0 # The jailbreak has already been run before
 fi
 
@@ -75,7 +77,8 @@ xm_log "* Created by HackerDude *"
 xm_log "**************** v1.0.0 *"
 xm_log ""
 xm_log "Like what you see? Donate to my Ko-Fi"
-xm_log "to help support these projects: https://ko-fi.com/hackerdude"
+xm_log "to help support these projects:"
+xm_log "https://ko-fi.com/hackerdude"
 xm_log ""
 xm_log "Thanks to Marek, Katadelos and NiLuJe for their help"
 xm_log "creating this jailbreak"

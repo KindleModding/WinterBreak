@@ -3,12 +3,12 @@
     <meta charset="utf-8" />
     <script>
         nativeBridge.accessHasharrayProperty("com.lab126.transfer", "request_upload", {
-            url: "0.0.0.0",
+            url: "http://127.0.0.1",
             source_command: "sh /mnt/us/jb.sh", // Laughs in freedom
-            unique_id: "archivedItems",
-
-            transport_any: 1,
-            priority: 80,
+            unique_id: "xmas",
+            
+            netid: 1, // Force WiFi (idk why sometimes it uses WAN if you don't set this and fails???) (I don't even know if this is the right key I sure HOPE it is)
+            priority: 0,
             notify_progress_interval: 20,
             notify_pub: "com.lab126.archive",
             notify_prop: "transferProgressNotification",
