@@ -1,6 +1,5 @@
 #!/bin/sh
 
-mkdir mnt
 mkdir patchedUks
 mkdir mntsqsh
 sudo mount -o loop uks.sqsh mntsqsh
