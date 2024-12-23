@@ -12,6 +12,11 @@ fi
 
 chmod +x ./utils/kindletool # DONT ASK
 
+echo "* downloading firmware from Amazon"
+if [ ! -f ./update_kindle_12th_gen.bin ]; then
+   wget https://www.amazon.com/update_KindlePaperwhite_12th_Gen_2024 -O update_kindle_12th_gen.bin
+fi
+
 echo "* extracting and mounting fw"
 sh ./utils/extractAndMountFw.sh
 echo "* extracting uks.sqsh from official firmware"
