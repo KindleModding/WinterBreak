@@ -21,7 +21,7 @@
 <body>
   <div id="mainBody">
     <h1>MountSus</h1>
-    <p>v1.0.0-BETA</p>
+    <p>v1.0.0-FINAL</p>
     <p>"After all, all devices have their dangers. The discovery of speech introduced communication - and lies."</p>
     <p>- Isaac Asimov</p>
     <textarea rows=10 id="log"></textarea>
@@ -29,7 +29,7 @@
 
   <script>
     log("Activating dialog");
-    kindle.messaging.sendMessage("com.lab126.pillow", "customDialog", { name: "../../../../../../mnt/us/apps/com.bluebotlabs.mountsus/dialoger", clientParams:{show:true, jsEnabled:false} });
+    kindle.messaging.sendMessage("com.lab126.pillow", "customDialog", { name: "../../../../../../mnt/us/apps/com.hackerdude.mountsus/dialoger", clientParams:{show:true, jsEnabled:false} });
     log("Dialog activated");
   </script>
 </body>

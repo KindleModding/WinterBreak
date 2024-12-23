@@ -4,7 +4,7 @@
 # Based on the bridge script from the 1.16.N hotfix package
 # Special thanks to Marek, Katadelos and NiLuJe
 #
-# $Id: jb.sh ????? 2023-11-19 08:12:38Z Bluebotlabs $
+# $Id: jb.sh ????? 2023-11-19 08:12:38Z HackerDude $
 #
 ##
 
@@ -69,7 +69,7 @@ make_immutable() {
 # Actual JB from here
 ###
 ms_log "MOUNTSUS JAILBREAK"
-ms_log "Created by Bluebotlabs"
+ms_log "Created by HackerDude"
 POS=$POS+1
 ms_log "Thanks to Marek, Katadelos and NiLuJe for their help"
 ms_log "creating this jailbreak"
