@@ -25,9 +25,12 @@ ms_log() {
 }
 
 ###
-# Prevents potential bootloop
+# Prevents potential bootloop (MountSus auto-reboots on completion)
 ###
 if [ -f "/mnt/us/mountsus.log" ] ; then
+  exit 0 # The jailbreak has already been run before
+fi
+if [ -d "/mnt/us/mountsus.log" ] ; then # Just in case!
   exit 0 # The jailbreak has already been run before
 fi
 ms_log "MOUNTSUS PRELOAD"
@@ -164,3 +167,5 @@ ms_log "Enabled mntus exec flag"
 mntroot ro
 
 ms_log "Finished installing jailbreak!"
+
+reboot

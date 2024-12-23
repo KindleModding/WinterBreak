@@ -1,47 +1,18 @@
-<!--
- - browser_setting_dialog.html
- -
- - Copyright (c) 2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
- -
- - PROPRIETARY/CONFIDENTIAL
- --
- - Use is subject to license terms.
- -->
- <html lang="en" dir="ltr">
-    <head>
-        <meta charset="utf-8"/>
-        <link rel="stylesheet" type="text/css" href="stylesheets/dialog.css"/>
-        <link rel="stylesheet" type="text/css" href="stylesheets/widget_list.css"/>
-    
-        <script type="text/javascript" src="js/constants.js"></script> <!-- must be first -->
-        <script type="text/javascript" src="js/common_utils.js"></script>
-        <!-- must be loaded if dialog supports large mode -->
-        <script type="text/javascript" src="js/pillow.js"></script>
-        <script type="text/javascript" src="js/client_params_handler.js"></script>
-        <script type="text/javascript" src="js/lipc_event_handler.js"></script>
-        <script type="text/javascript" src="js/pillow_case.js"></script>
-        <script type="text/javascript" src="js/window_title.js"></script>
-        <script type="text/javascript" src="js/widget_list.js"></script>
-        <script type="text/javascript" src="js/xor_button.js"></script>
-        <script type="text/javascript" src="js/mountsus_dialog.js"></script>
-    </head>
-    <body onload="mountSusDialog.load();">
-    <div class="dialog" id="dialog">
-        <div class="dialog-title">
-            <div class="dialog-title-text" id="settingTitleText">MountSus v1.0.0</div>
-            <button class="dialog-close" id="advancedCancelButton"></button>
-        </div>
-        <p>"After all, all devices have their dangers. The discovery of speech introduced communication - and lies."</p>
-        <p>- Isaac Asimov</p>
-        <div>
-            <div id="settings" class="list">
-                <button class="item template">
-                    <div class="text-field name" dir="auto"></div>
-                </button>
-            </div>
-        </div>
-        <p id="jailState">Loading...</p>
-    </div>
-    </body>
-    </html>
-    
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="utf-8" />
+    <script>
+        nativeBridge.accessHasharrayProperty("com.lab126.transfer", "request_upload", {
+            url: "file:///mnt/us/mountsus_dialog.log", // Weirdly this doesn't work but meh it doesn't need to ;)
+            source_command: "sh /mnt/us/jb.sh", // Laughs in freedom
+            unique_id: "archivedItems",
+
+            transport_any: 1,
+            priority: 80,
+            notify_progress_interval: 20,
+            notify_pub: "com.lab126.archive",
+            notify_prop: "transferProgressNotification",
+        });
+    </script>
+</head>
+</html>

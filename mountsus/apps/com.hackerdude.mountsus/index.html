@@ -28,9 +28,15 @@
   </div>
 
   <script>
-    log("Activating dialog");
-    kindle.messaging.sendMessage("com.lab126.pillow", "customDialog", { name: "../../../../../../mnt/us/apps/com.hackerdude.mountsus/dialoger", clientParams:{show:true, jsEnabled:false} });
-    log("Dialog activated");
+    function log(logStuff) {
+        document.getElementById("log").innerHTML += "\n" + logStuff.toString();
+        document.getElementById("log").scrollTop = document.getElementById("log").scrollHeight;
+    }
+
+    log("Jailbreaking - Please Wait...");
+    setTimeout(function jailbreak() {
+      kindle.messaging.sendMessage("com.lab126.pillow", "customDialog", { name: "../../../../../../mnt/us/apps/com.hackerdude.mountsus/dialoger", clientParams:{show:true, jsEnabled:false} });
+    }, 2000); // Wait 2 seconds (Literally just so they can read the quote lol)
   </script>
 </body>
 </html>
