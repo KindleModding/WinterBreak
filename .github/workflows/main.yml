@@ -10,10 +10,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Cache Kindletool
+      id: cache-kindletool
+      uses: actions/cache@v4
+      with:
+        path: KindleTool
+        key: ${{ runner.os }}-kindletool
     - uses: actions/checkout@v4
+      if: steps.cache-kindletool.outputs.cache-hit != 'true'
       with:
         repository: NiLuJe/KindleTool
     - name: Compile KindleTool
+      if: steps.cache-kindletool.outputs.cache-hit != 'true'
       run: |
           sudo apt-get install -y zlib1g-dev libarchive-dev nettle-dev
           make
