@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# XMAS Jailbreak Script
+# WinterBreak Jailbreak Script
 # Based on the bridge script from the 1.16.N hotfix package
 # Special thanks to Marek, Katadelos and NiLuJe
 #
@@ -18,20 +18,20 @@ set +e # If boot is halted stuff seriously goes wrong (actually we don't need th
 ###
 POS=1
 xm_log() {
-  echo "${1}" >> /mnt/us/xmas_jb.log
+  echo "${1}" >> /mnt/us/winterbreak.log
   eips 0 $POS "${1}"
   echo "${1}"
   POS=$((POS+1))
 }
 
 ###
-# Prevents potential bootloop (XMAS auto-reboots on completion)
+# Prevents potential bootloop (WinterBreak auto-reboots on completion)
 ###
-if [ -f "/mnt/us/xmas_jb.log" ] ; then
+if [ -f "/mnt/us/winterbreak.log" ] ; then
   xm_log "Already ran - exiting"
   exit 0 # The jailbreak has already been run before
 fi
-if [ -d "/mnt/us/xmas_jb.log" ] ; then # Just in case!
+if [ -d "/mnt/us/winterbreak.log" ] ; then # Just in case!
   xm_log "Already ran - exiting"
   exit 0 # The jailbreak has already been run before
 fi
@@ -72,9 +72,9 @@ make_immutable() {
 ###
 # Actual JB from here
 ###
-xm_log "**** XMAS  JAILBREAK ****"
-xm_log "* Created by HackerDude *"
-xm_log "**************** v1.0.0 *"
+xm_log "**** WinterBreak JAILBREAK ****"
+xm_log "*    Created by HackerDude    *"
+xm_log "********************** v1.0.0 *"
 xm_log ""
 xm_log "Like what you see? Donate to my Ko-Fi"
 xm_log "to help support these projects:"

@@ -32,19 +32,19 @@ rm -rf build/apps/* # Remove unneeded apps
 rm -rf build/.git # Remove .git
 
 sh ./utils/unmountAndDeleteFw.sh
-echo "* Copying xmas"
-cp -r xmasjb/* build/
+echo "* Copying WinterBreak"
+cp -r winter_break/* build/
 echo "* copying README to build directory"
 cp README.md build/
 echo "* moving patched uks to build directory"
 cp patchedUks.sqsh build/
 rm -rf patchedUks.sqsh
-echo "* done. XMAS jailbreak built."
+echo "* done. WinterBreak jailbreak built."
 
 echo "* packing tar.gz file"
 cd build
-tar -czf ../XMAS_JB.tar.gz .
+tar -czf ../WinterBreak.tar.gz .
 cd ..
 rm -rf build/*
 rm -rf build/.*
-mv XMAS_JB.tar.gz build/
+mv WinterBreak.tar.gz build/

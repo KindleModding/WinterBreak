@@ -2,11 +2,11 @@
     "minVersion": 1,
     "version": 1,
     "waf": true,
-    "id": "com.hackerdude.xmasjb",
-    "name": "XMAS Jailbreak",
+    "id": "com.hackerdude.winterbreak",
+    "name": "WinterBreak",
     "author": "HackerDude",
     "description": "Jailbreaks your Kindle!",
-    "repo": "https://github.com/KindleModding/XMAS-JB",
+    "repo": "https://github.com/KindleModding/WinterBreak",
     "icon": "icon.png",
     "entrypoint": "index.html"
   }

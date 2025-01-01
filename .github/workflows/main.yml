@@ -48,5 +48,5 @@ jobs:
           sh ./build.sh
     - uses: actions/upload-artifact@v4
       with:
-        name: XMAS_JB
+        name: WinterBreak
         path: build/*
