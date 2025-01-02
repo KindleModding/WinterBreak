@@ -42,14 +42,10 @@ if [ -f /var/local/system/mntus.params ]; then
 fi
 
 
+
 ###
 # Helper functions
 ###
-# Actually these mounting ones were stolen from /etc/upstart/init.sh
-RW=
-mount_ro() { [ -n "$RW" ] && mount -o ro,remount / ; }
-mount_rw() { [ -z "$RW" ] && mount -o rw,remount / ; RW=yes ; }
-
 make_mutable() {
         local my_path="${1}"
         # NOTE: Can't do that on symlinks, hence the hoop-jumping...
@@ -79,7 +75,7 @@ make_immutable() {
 ###
 wb_log "**** WinterBreak JAILBREAK ****"
 wb_log "*    Created by HackerDude    *"
-wb_log "********************** v1.1.0 *"
+wb_log "********************** 1.2.0 *"
 wb_log ""
 wb_log "Like what you see? Donate to my Ko-Fi"
 wb_log "to help support these projects:"
@@ -100,7 +96,6 @@ wb_log ""
 ###
 install_touch_update_key()
 {
-        mount_rw
         wb_log "install_touch_update_key - Copying the jailbreak updater key"
         make_mutable "/etc/uks/pubdevkey01.pem"
         rm -rf "/etc/uks/pubdevkey01.pem"
@@ -120,7 +115,6 @@ EOF
 
 install_touch_update_key_squash()
 {
-    mount_rw
     wb_log "install_touch_update_key_squash - Copying the jailbreak updater keystore"
     make_mutable "/etc/uks.sqsh"
     local my_loop="$(grep ' /etc/uks ' /proc/mounts | cut -f1 -d' ')"
@@ -131,8 +125,10 @@ install_touch_update_key_squash()
     chown root:root "/etc/uks.sqsh"
     chmod 0644 "/etc/uks.sqsh"
     make_immutable "/etc/uks.sqsh"
-    mount_ro
 }
+
+# The real fun starts here
+mntroot rw
 
 # Check if we need to do something with the OTA pubkey
 if [ ! -f "/etc/uks.sqsh" ] && [ ! -f "/etc/uks/pubdevkey01.pem" ] ; then
@@ -163,25 +159,30 @@ if [ -f "/etc/uks.sqsh" ] && [ -f "/mnt/us/patchedUks.sqsh" ] ; then
   fi
 fi
 
-# Final steps
-mount_rw
-
 # Make sure we can use UYK for OTA packages on FW >= 5.12.x
 make_mutable "/PRE_GM_DEBUGGING_FEATURES_ENABLED__REMOVE_AT_GMC"
 rm -rf "/PRE_GM_DEBUGGING_FEATURES_ENABLED__REMOVE_AT_GMC"
 touch "/PRE_GM_DEBUGGING_FEATURES_ENABLED__REMOVE_AT_GMC"
 make_immutable "/PRE_GM_DEBUGGING_FEATURES_ENABLED__REMOVE_AT_GMC"
-wb_log "Enabled developer flag"
+
+if [ -f "/PRE_GM_DEBUGGING_FEATURES_ENABLED__REMOVE_AT_GMC" ] ; then
+    wb_log "Enabled developer flag"
+else
+    wb_log "Developer flag install FAIL"
+fi
+
 
 touch "/MNTUS_EXEC"
 make_immutable "/MNTUS_EXEC"
-wb_log "Enabled mntus exec flag"
+
+if [ -f "/MNTUS_EXEC" ] ; then
+    wb_log "Enabled mntus exec flag"
+else
+    wb_log "mntus exec flag install FAIL"
+fi
 
 # Bye
 mntroot ro
 
 wb_log "Finished installing jailbreak!"
-
-wb_log "Waiting 3 seconds to reboot..."
-sleep 3
-reboot
+wb_log "Please install hotfix now."
