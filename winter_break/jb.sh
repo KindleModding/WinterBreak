@@ -119,9 +119,9 @@ install_touch_update_key_squash()
     make_mutable "/etc/uks.sqsh"
     umount "/etc/uks"
     cp --verbose -f "/mnt/us/patchedUks.sqsh" "/etc/uks.sqsh"
-    mount "/etc/uks.sqsh" "/etc/uks" -o loop,norelatime,nodiratime,noatime -t squashfs
     chown root:root "/etc/uks.sqsh"
-    chmod 0644 "/etc/uks.sqsh"
+    chmod 744 "/etc/uks.sqsh"
+    mount "/etc/uks.sqsh" "/etc/uks" -o loop,norelatime,nodiratime,noatime -t squashfs
     make_immutable "/etc/uks.sqsh"
 }
 
