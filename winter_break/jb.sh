@@ -90,7 +90,7 @@ make_immutable() {
 ###
 xm_log "**** WinterBreak JAILBREAK ****"
 xm_log "*    Created by HackerDude    *"
-xm_log "********************** v1.0.0 *"
+xm_log "********************** v1.1.0 *"
 xm_log ""
 xm_log "Like what you see? Donate to my Ko-Fi"
 xm_log "to help support these projects:"
