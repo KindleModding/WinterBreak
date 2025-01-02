@@ -117,11 +117,9 @@ install_touch_update_key_squash()
 {
     wb_log "install_touch_update_key_squash - Copying the jailbreak updater keystore"
     make_mutable "/etc/uks.sqsh"
-    local my_loop="$(grep ' /etc/uks ' /proc/mounts | cut -f1 -d' ')"
-    umount "${my_loop}"
-    losetup -d "${my_loop}"
+    umount "/etc/uks"
     cp --verbose -f "/mnt/us/patchedUks.sqsh" "/etc/uks.sqsh"
-    mount -o loop="${my_loop}",norelatime,nodiratime,noatime -t squashfs "/etc/uks.sqsh" "/etc/uks"
+    mount "/etc/uks.sqsh" "/etc/uks" -o loop,norelatime,nodiratime,noatime -t squashfs
     chown root:root "/etc/uks.sqsh"
     chmod 0644 "/etc/uks.sqsh"
     make_immutable "/etc/uks.sqsh"
