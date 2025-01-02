@@ -17,7 +17,7 @@ set +e # If boot is halted stuff seriously goes wrong (actually we don't need th
 # Define logging function
 ###
 POS=1
-xm_log() {
+wb_log() {
   echo "${1}" >> /mnt/us/winterbreak.log
   eips 0 $POS "${1}"
   echo "${1}"
@@ -27,29 +27,18 @@ xm_log() {
 ###
 # Prevents potential bootloop for people who didn't properly remove the beta (from when it was called MountSus)
 ###
-if [ -f "/mnt/us/mountsus.log" ] ; then
-  xm_log "MountSus Detected - exiting"
-  exit 0 # The jailbreak has already been run before
+if [ -f /var/local/root/mntus.params ]; then
+  if [ $(grep -i "/mnt/us/JB.sh" "/var/local/root/mntus.params") != "" ] ; then
+    wb_log "ERROR: MountSus Detected - exiting"
+    exit 0 # The jailbreak has already been run before
+  fi
 fi
-if [ -d "/mnt/us/mountsus.log" ] ; then # Just in case!
-  xm_log "MountSus Detected - exiting"
-  exit 0 # The jailbreak has already been run before
-fi
-if [ -f "/mnt/us/Mountsus.log" ] ; then
-  xm_log "MountSus Detected - exiting"
-  exit 0 # The jailbreak has already been run before
-fi
-if [ -d "/mnt/us/Mountsus.log" ] ; then # Just in case!
-  xm_log "MountSus Detected - exiting"
-  exit 0 # The jailbreak has already been run before
-fi
-if [ -f "/mnt/us/MountSus.log" ] ; then
-  xm_log "MountSus Detected - exiting"
-  exit 0 # The jailbreak has already been run before
-fi
-if [ -d "/mnt/us/MountSus.log" ] ; then # Just in case!
-  xm_log "MountSus Detected - exiting"
-  exit 0 # The jailbreak has already been run before
+
+if [ -f /var/local/system/mntus.params ]; then
+  if [ $(grep -i "/mnt/us/JB.sh" "/var/local/system/mntus.params") != "" ] ; then # Just in case!
+      wb_log "ERROR: MountSus Detected - exiting"
+      exit 0 # The jailbreak has already been run before
+  fi
 fi
 
 
@@ -88,22 +77,22 @@ make_immutable() {
 ###
 # Actual JB from here
 ###
-xm_log "**** WinterBreak JAILBREAK ****"
-xm_log "*    Created by HackerDude    *"
-xm_log "********************** v1.1.0 *"
-xm_log ""
-xm_log "Like what you see? Donate to my Ko-Fi"
-xm_log "to help support these projects:"
-xm_log "https://ko-fi.com/hackerdude"
-xm_log ""
-xm_log "Thanks to Marek, Katadelos and NiLuJe for their help"
-xm_log "creating this jailbreak"
-xm_log ""
-xm_log "After all, all devices have their dangers."
-xm_log "The discovery of speech introduced communication - and lies."
-xm_log "- Isaac Asimov"
-xm_log ""
-xm_log ""
+wb_log "**** WinterBreak JAILBREAK ****"
+wb_log "*    Created by HackerDude    *"
+wb_log "********************** v1.1.0 *"
+wb_log ""
+wb_log "Like what you see? Donate to my Ko-Fi"
+wb_log "to help support these projects:"
+wb_log "https://ko-fi.com/hackerdude"
+wb_log ""
+wb_log "Thanks to Marek, Katadelos and NiLuJe for their help"
+wb_log "creating this jailbreak"
+wb_log ""
+wb_log "After all, all devices have their dangers."
+wb_log "The discovery of speech introduced communication - and lies."
+wb_log "- Isaac Asimov"
+wb_log ""
+wb_log ""
 
 
 ###
@@ -112,7 +101,7 @@ xm_log ""
 install_touch_update_key()
 {
         mount_rw
-        xm_log "install_touch_update_key - Copying the jailbreak updater key"
+        wb_log "install_touch_update_key - Copying the jailbreak updater key"
         make_mutable "/etc/uks/pubdevkey01.pem"
         rm -rf "/etc/uks/pubdevkey01.pem"
         cat > "/etc/uks/pubdevkey01.pem" << EOF
@@ -132,7 +121,7 @@ EOF
 install_touch_update_key_squash()
 {
     mount_rw
-    xm_log "install_touch_update_key_squash - Copying the jailbreak updater keystore"
+    wb_log "install_touch_update_key_squash - Copying the jailbreak updater keystore"
     make_mutable "/etc/uks.sqsh"
     local my_loop="$(grep ' /etc/uks ' /proc/mounts | cut -f1 -d' ')"
     umount "${my_loop}"
@@ -151,9 +140,9 @@ if [ ! -f "/etc/uks.sqsh" ] && [ ! -f "/etc/uks/pubdevkey01.pem" ] ; then
 
   # Verify key installation
   if [ -f "/etc/uks/pubdevkey01.pem" ] ; then
-  xm_log "Developer keys installed successfully! (pubdevkey01.pem)"
+  wb_log "Developer keys installed successfully! (pubdevkey01.pem)"
   else
-    xm_log "ERR - Could not install pubdevkey01.pem"
+    wb_log "ERR - Could not install pubdevkey01.pem"
   fi
 fi
 
@@ -163,14 +152,14 @@ if [ -f "/etc/uks.sqsh" ] && [ -f "/mnt/us/patchedUks.sqsh" ] ; then
 
   # Verify key installation
   if [ "$(md5sum "${ROOT}/etc/uks.sqsh" | awk '{ print $1; }')" ==  "$(md5sum "${ROOT}/mnt/us/patchedUks.sqsh" | awk '{ print $1; }')" ] ; then
-    xm_log "Developer keys installed successfully! (uks.sqsh)"
-    xm_log "$(ls /etc/uks)"
+    wb_log "Developer keys installed successfully! (uks.sqsh)"
+    wb_log "$(ls /etc/uks)"
   else
-    xm_log "ERR - Could not install uks.sqsh"
-    xm_log "$(whoami)"
-    xm_log "$(md5sum "/mnt/us/patchedUks.sqsh" | awk '{ print $1; }')"
-    xm_log "$(md5sum "/etc/uks.sqsh" | awk '{ print $1; }')"
-    xm_log "$(md5sum "${ROOT}/etc/uks.sqsh" | awk '{ print $1; }')"
+    wb_log "ERR - Could not install uks.sqsh"
+    wb_log "$(whoami)"
+    wb_log "$(md5sum "/mnt/us/patchedUks.sqsh" | awk '{ print $1; }')"
+    wb_log "$(md5sum "/etc/uks.sqsh" | awk '{ print $1; }')"
+    wb_log "$(md5sum "${ROOT}/etc/uks.sqsh" | awk '{ print $1; }')"
   fi
 fi
 
@@ -182,17 +171,17 @@ make_mutable "/PRE_GM_DEBUGGING_FEATURES_ENABLED__REMOVE_AT_GMC"
 rm -rf "/PRE_GM_DEBUGGING_FEATURES_ENABLED__REMOVE_AT_GMC"
 touch "/PRE_GM_DEBUGGING_FEATURES_ENABLED__REMOVE_AT_GMC"
 make_immutable "/PRE_GM_DEBUGGING_FEATURES_ENABLED__REMOVE_AT_GMC"
-xm_log "Enabled developer flag"
+wb_log "Enabled developer flag"
 
 touch "/MNTUS_EXEC"
 make_immutable "/MNTUS_EXEC"
-xm_log "Enabled mntus exec flag"
+wb_log "Enabled mntus exec flag"
 
 # Bye
 mntroot ro
 
-xm_log "Finished installing jailbreak!"
+wb_log "Finished installing jailbreak!"
 
-xm_log "Waiting 3 seconds to reboot..."
+wb_log "Waiting 3 seconds to reboot..."
 sleep 3
 reboot
