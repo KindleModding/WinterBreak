@@ -25,14 +25,30 @@ xm_log() {
 }
 
 ###
-# Prevents potential bootloop (WinterBreak auto-reboots on completion)
+# Prevents potential bootloop for people who didn't properly remove the beta (from when it was called MountSus)
 ###
-if [ -f "/mnt/us/winterbreak.log" ] ; then
-  xm_log "Already ran - exiting"
+if [ -f "/mnt/us/mountsus.log" ] ; then
+  xm_log "MountSus Detected - exiting"
   exit 0 # The jailbreak has already been run before
 fi
-if [ -d "/mnt/us/winterbreak.log" ] ; then # Just in case!
-  xm_log "Already ran - exiting"
+if [ -d "/mnt/us/mountsus.log" ] ; then # Just in case!
+  xm_log "MountSus Detected - exiting"
+  exit 0 # The jailbreak has already been run before
+fi
+if [ -f "/mnt/us/Mountsus.log" ] ; then
+  xm_log "MountSus Detected - exiting"
+  exit 0 # The jailbreak has already been run before
+fi
+if [ -d "/mnt/us/Mountsus.log" ] ; then # Just in case!
+  xm_log "MountSus Detected - exiting"
+  exit 0 # The jailbreak has already been run before
+fi
+if [ -f "/mnt/us/MountSus.log" ] ; then
+  xm_log "MountSus Detected - exiting"
+  exit 0 # The jailbreak has already been run before
+fi
+if [ -d "/mnt/us/MountSus.log" ] ; then # Just in case!
+  xm_log "MountSus Detected - exiting"
   exit 0 # The jailbreak has already been run before
 fi
 
