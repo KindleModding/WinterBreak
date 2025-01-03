@@ -124,7 +124,7 @@ install_touch_update_key_squash()
     mount -o loop="${my_loop}",nodiratime,noatime -t squashfs "/etc/uks.sqsh" "/etc/uks"
     chown root:root "/etc/uks.sqsh"
     chmod 0644 "/etc/uks.sqsh"
-    make_immutable "/etc/uks.sqsh"
+    #make_immutable "/etc/uks.sqsh" # This breaks mounting on 12th gen (no, really)
 }
 
 # The real fun starts here
