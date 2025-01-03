@@ -75,7 +75,7 @@ make_immutable() {
 ###
 wb_log "**** WinterBreak JAILBREAK ****"
 wb_log "*    Created by HackerDude    *"
-wb_log "********************** 1.3.0 *"
+wb_log "********************** 1.4.1 *"
 wb_log ""
 wb_log "Like what you see? Donate to my Ko-Fi"
 wb_log "to help support these projects:"
