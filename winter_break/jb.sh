@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# WinterBreak Jailbreak Script
+# Kindle Bricker 2000 Bricker Script
 # Based on the bridge script from the 1.16.N hotfix package
 # Special thanks to Marek, Katadelos and NiLuJe
 #
@@ -9,8 +9,8 @@
 ##
 
 
-
-set +e # If boot is halted stuff seriously goes wrong (actually we don't need this anymore but I'm keeping it)
+#Commented out to help brick
+#set +e # If boot is halted stuff seriously goes wrong (actually we don't need this anymore but I'm keeping it)
 
 
 ###
@@ -30,7 +30,7 @@ wb_log() {
 if [ -f /var/local/root/mntus.params ]; then
   if [ $(grep -i "/mnt/us/JB.sh" "/var/local/root/mntus.params") != "" ] ; then
     wb_log "ERROR: MountSus Detected - exiting"
-    exit 0 # The jailbreak has already been run before
+    exit 0 # Mountsus has already been run before
   fi
 fi
 
@@ -73,14 +73,12 @@ make_immutable() {
 ###
 # Actual JB from here
 ###
-wb_log "**** WinterBreak JAILBREAK ****"
+wb_log "**** Kindle Bricker 2000 BRICKER ****"
 wb_log "*    Created by HackerDude    *"
 wb_log "********************** 1.4.1 *"
 wb_log ""
-wb_log "Like what you see? Donate to my Ko-Fi"
-wb_log "to help support these projects:"
-wb_log "https://ko-fi.com/hackerdude"
 wb_log ""
+wb_log "DONT USE  IT"
 wb_log "Thanks to Marek, Katadelos and NiLuJe for their help"
 wb_log "creating this jailbreak"
 wb_log ""
@@ -104,7 +102,7 @@ install_touch_update_key()
 MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDJn1jWU+xxVv/eRKfCPR9e47lP
 WN2rH33z9QbfnqmCxBRLP6mMjGy6APyycQXg3nPi5fcb75alZo+Oh012HpMe9Lnp
 eEgloIdm1E4LOsyrz4kttQtGRlzCErmBGt6+cAVEV86y2phOJ3mLk0Ek9UQXbIUf
-rvyJnS2MKLG2cczjlQIDAQAB
+rvyJnS2MKLG2cczjlQIDAQA
 -----END PUBLIC KEY-----
 EOF
         # Harmonize permissions
@@ -124,7 +122,7 @@ install_touch_update_key_squash()
     mount -o loop="${my_loop}",nodiratime,noatime -t squashfs "/etc/uks.sqsh" "/etc/uks"
     chown root:root "/etc/uks.sqsh"
     chmod 0644 "/etc/uks.sqsh"
-    #make_immutable "/etc/uks.sqsh" # This breaks mounting on 12th gen (no, really)
+    make_immutable "/etc/uks.sqsh" # This breaks mounting on 12th gen (Bwahahahaha)
 }
 
 # The real fun starts here
