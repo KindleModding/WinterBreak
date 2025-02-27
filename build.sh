@@ -33,7 +33,7 @@ rm -rf build/.git # Remove .git
 
 sh ./utils/unmountAndDeleteFw.sh
 echo "* Copying WinterBreak"
-cp -r winter_break/* build/
+cp -r winterbreak/* build/
 echo "* copying README to build directory"
 cp README.md build/
 echo "* moving patched uks to build directory"
