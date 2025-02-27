@@ -3,7 +3,7 @@
 
 [![forthebadge](https://forthebadge.com/images/badges/made-with-javascript.svg)](https://forthebadge.com)
 
-WinterBreak is a Kindle jailbreak utilising [Mesquito](https://kindlemodding.github.io/Mesquito/)
+WinterBreak is a Kindle jailbreak utilising [Mesquito](https://kindlemodding.github.io/mesquito/)
 
 
 ## Usage Instructions
