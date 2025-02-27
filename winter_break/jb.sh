@@ -130,6 +130,17 @@ install_touch_update_key_squash()
 # The real fun starts here
 mntroot rw
 
+# Check if OTA is disabled and if so enable it so hotfix can later be applied
+if [ -f "/usr/bin/otaupd.bck" ] ; then
+  mv /usr/bin/otaupd.bck /usr/bin/otaupd
+  wb_log "otaupd restored"
+fi
+
+if [ -f "/usr/bin/otav3.bck" ] ; then
+  mv /usr/bin/otav3.bck /usr/bin/otav3
+  wb_log "otav3 restored"
+fi
+
 # Check if we need to do something with the OTA pubkey
 if [ ! -f "/etc/uks.sqsh" ] && [ ! -f "/etc/uks/pubdevkey01.pem" ] ; then
   install_touch_update_key
@@ -184,5 +195,11 @@ fi
 # Bye
 mntroot ro
 
-wb_log "Finished installing jailbreak!"
-wb_log "Please install hotfix now."
+wb_log "                                      "
+wb_log "**************************************"
+wb_log "*** Finished installing jailbreak! ***"
+wb_log "***                                ***"
+wb_log "***   Please Install HOTFIX now    ***"
+wb_log "**************************************"
+wb_log "                                      "
+wb_log "                                      "
