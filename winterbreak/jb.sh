@@ -141,19 +141,16 @@ if [ -f "/usr/bin/otav3.bck" ] ; then
   wb_log "otav3 restored"
 fi
 
-# Check if we need to do something with the OTA pubkey
-if [ ! -f "/etc/uks.sqsh" ] && [ ! -f "/etc/uks/pubdevkey01.pem" ] ; then
-  install_touch_update_key
-
-  # Verify key installation
-  if [ -f "/etc/uks/pubdevkey01.pem" ] ; then
-  wb_log "Developer keys installed successfully! (pubdevkey01.pem)"
-  else
-    wb_log "ERR - Could not install pubdevkey01.pem"
-  fi
+# Install update key in folder
+install_touch_update_key
+# Verify key installation
+if [ -f "/etc/uks/pubdevkey01.pem" ] ; then
+wb_log "Developer keys installed successfully (Standard Method)! (pubdevkey01.pem)"
+else
+  wb_log "ERR - Could not install pubdevkey01.pem (Standard Method)"
 fi
 
-# Check if we need to do something with the OTA keystore
+# Check if we need to do something with the OTA SQSH keystore
 if [ -f "/etc/uks.sqsh" ] && [ -f "/mnt/us/patchedUks.sqsh" ] ; then
   install_touch_update_key_squash
 
