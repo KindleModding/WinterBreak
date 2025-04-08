@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 rm -rf build
 
@@ -6,15 +6,15 @@ rm -rf build
 # Check admin
 ##
 if [[ $EUID -ne 0 ]]; then
-   echo "This script must be run as root" 
-   exit 1
+  echo "This script must be run as root"
+  exit 1
 fi
 
 chmod +x ./utils/kindletool # DONT ASK
 
 echo "* downloading firmware from Amazon"
 if [ ! -f ./update_kindle_12th_gen.bin ]; then
-   wget https://www.amazon.com/update_KindlePaperwhite_12th_Gen_2024 -q -O update_kindle_12th_gen.bin
+  wget https://www.amazon.com/update_KindlePaperwhite_12th_Gen_2024 -q -O update_kindle_12th_gen.bin
 fi
 
 echo "* extracting and mounting fw"
@@ -27,9 +27,9 @@ sh ./utils/patchUksSqsh.sh
 echo "* cloning Mesquito"
 mkdir build
 git clone https://github.com/KindleModding/Mesquito.git build
-rm build/* # Remove loose files
-rm -rf build/apps/* # Remove unneeded apps
-rm -rf build/.git # Remove .git
+rm build/*              # Remove loose files
+rm -rf build/apps/*     # Remove unneeded apps
+rm -rf build/.git       # Remove .git
 rm -rf build/.gitignore # Remove .gitignore
 
 sh ./utils/unmountAndDeleteFw.sh
@@ -41,13 +41,11 @@ echo "* moving patched uks to build directory"
 cp patchedUks.sqsh build/
 rm -rf patchedUks.sqsh
 echo "* done. WinterBreak jailbreak built."
-rm -rf build/.git # Remove .git
+rm -rf build/.git       # Remove .git
 rm -rf build/.gitignore # Remove .gitignore
 
 echo "* packing tar.gz file"
-cd build
-tar -czf ../WinterBreak.tar.gz .
-cd ..
+tar -czf WinterBreak.tar.gz -C build .
 rm -rf build/*
 rm -rf build/.*
 mv WinterBreak.tar.gz build/
