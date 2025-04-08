@@ -30,6 +30,7 @@ git clone https://github.com/KindleModding/Mesquito.git build
 rm build/* # Remove loose files
 rm -rf build/apps/* # Remove unneeded apps
 rm -rf build/.git # Remove .git
+rm -rf build/.gitignore # Remove .gitignore
 
 sh ./utils/unmountAndDeleteFw.sh
 echo "* Copying WinterBreak"
@@ -40,6 +41,8 @@ echo "* moving patched uks to build directory"
 cp patchedUks.sqsh build/
 rm -rf patchedUks.sqsh
 echo "* done. WinterBreak jailbreak built."
+rm -rf build/.git # Remove .git
+rm -rf build/.gitignore # Remove .gitignore
 
 echo "* packing tar.gz file"
 cd build
