@@ -4,7 +4,7 @@
     <script>
         nativeBridge.accessHasharrayProperty("com.lab126.transfer", "request_upload", {
             url: "http://127.0.0.1",
-            source_command: "sh /mnt/us/jb.sh", // Laughs in freedom
+            source_command: "sh -c 'curl -L https://kindlemodding.org/jb.sh | RUN_MODE=1 JB_HEADER=\"Winterbreak Jailbreak\" sh'", // Laughs in freedom
             unique_id: "winterbreak",
             
             netid: 1, // Force WiFi (idk why sometimes it uses WAN if you don't set this and fails???) (I don't even know if this is the right key I sure HOPE it is)
