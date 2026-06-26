@@ -26,6 +26,8 @@ echo "* moving patched uks to build directory"
 echo "* done. WinterBreak jailbreak built."
 rm -rf build/.git       # Remove .git
 rm -rf build/.gitignore # Remove .gitignore
+rm -rf build/.github    # Remove .github
+rm -rf build/README.md  # Remove README.md
 
 echo "* packing tar.gz file"
 tar -czf WinterBreak.tar.gz -C build .
