@@ -2,7 +2,7 @@
     "minVersion": 1,
     "version": 160,
     "waf": true,
-    "id": "com.hackerdude.winterbreak",
+    "id": "tech.hackerdude.winterbreak",
     "name": "WinterBreak",
     "author": "HackerDude",
     "description": "Jailbreaks your Kindle!",
