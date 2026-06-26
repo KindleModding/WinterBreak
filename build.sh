@@ -10,20 +10,6 @@ if [[ $EUID -ne 0 ]]; then
   exit 1
 fi
 
-chmod +x ./utils/kindletool # DONT ASK
-
-echo "* downloading firmware from Amazon"
-if [ ! -f ./update_kindle_12th_gen.bin ]; then
-  wget https://www.amazon.com/update_KindlePaperwhite_12th_Gen_2024 -q -O update_kindle_12th_gen.bin
-fi
-
-echo "* extracting and mounting fw"
-sh ./utils/extractAndMountFw.sh
-echo "* extracting uks.sqsh from official firmware"
-sh ./utils/extractUksFromFirmware.sh
-echo "* patching uks.sqsh with the sexy pubdevkey01.pem"
-sh ./utils/patchUksSqsh.sh
-
 echo "* cloning Mesquito"
 mkdir build
 git clone https://github.com/KindleModding/Mesquito.git build
@@ -32,14 +18,11 @@ rm -rf build/apps/*     # Remove unneeded apps
 rm -rf build/.git       # Remove .git
 rm -rf build/.gitignore # Remove .gitignore
 
-sh ./utils/unmountAndDeleteFw.sh
 echo "* Copying WinterBreak"
 cp -r winterbreak/* build/
 echo "* copying README to build directory"
 cp README.md build/
 echo "* moving patched uks to build directory"
-cp patchedUks.sqsh build/
-rm -rf patchedUks.sqsh
 echo "* done. WinterBreak jailbreak built."
 rm -rf build/.git       # Remove .git
 rm -rf build/.gitignore # Remove .gitignore
